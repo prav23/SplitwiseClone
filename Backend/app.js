@@ -14,10 +14,13 @@ app.use(
   }),
 );
 app.use(bodyParser.json());
+
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use('/api', apiRoutes);
 
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+// app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
 
 //use express session to maintain session data
 app.use(session({
@@ -31,7 +34,7 @@ app.use(session({
 // Setup an express server and define port to listen all incoming requests for this application
 const setUpExpress = () => {
   
-  const port = process.env.APP_PORT || 3000;
+  const port = process.env.APP_PORT || 3001;
 
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
