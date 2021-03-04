@@ -1,0 +1,12 @@
+export const GET_ERRORS ='GET_ERRORS';
+export const SET_CURRENT_USER ='SET_CURRENT_USER';
+export const GET_PROFILE = 'GET_PROFILE';
+export const PROFILE_LOADING = 'PROFILE_LOADING';
+export const PROFILE_NOT_FOUND = 'PROFILE_NOT_FOUND';
+export const CLEAR_CURRENT_PROFILE = 'CLEAR_CURRENT_PROFILE';
+// export const GET_ALL_HOMES = 'GET_ALL_HOMES';
+// export const GET_OWNER_HOMES = 'GET_OWNER_HOMES';
+// export const OWNER_HOME_LOADING = 'OWNER_HOME_LOADING';
+// export const GET_HOME= 'GET_HOME';
+// export const BOOK_HOME= 'BOOK_HOME';
+// export const GET_BOOKED_HOMES = 'GET_BOOKED_HOMES';

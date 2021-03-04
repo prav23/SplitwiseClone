@@ -4,6 +4,19 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-//render App component on the root element
-ReactDOM.render(<App />, document.getElementById('root'));
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import reducers from './reducers';
+
+// redux dev tools extension
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+    reducers,
+    composeEnhancers(applyMiddleware())
+    );
+
+ReactDOM.render(
+    <Provider store = { store }>
+        <App />
+    </Provider>, document.getElementById('root'));
 registerServiceWorker();
