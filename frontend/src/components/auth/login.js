@@ -11,7 +11,7 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {}
+      errors: {},
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -42,7 +42,7 @@ class Login extends Component {
 
     const userData = {
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
     };
     console.log(userData);
     this.props.loginUser(userData);
@@ -57,10 +57,8 @@ class Login extends Component {
           <br />
           <div className="row">
             <div className="col-md-5 m-auto">
-              <h2 className="display-8 text-center">Traveller Login</h2>
-
               <p className="lead text-center">
-                Sign in to your Airbnb 0.1 Traveller account
+                Sign in to your Splitwise account
               </p>
               <br />
               <form onSubmit={this.onSubmit}>
@@ -101,12 +99,12 @@ class Login extends Component {
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, { loginUser })(Login);

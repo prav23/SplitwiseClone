@@ -1,20 +1,21 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize(
-  "Splitwise",
+  "splitwisedb",
   "root",
-  "root",
+  "Sourcecode77",
   {
     host: "localhost",
     port: 3306,
-  },
+    dialect: "mysql",
+  }
 );
 
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log("Connection has been established successfully.");
   })
   .catch((err) => {
-    console.error('Unable to connect to the database:', err);
+    console.error("Unable to connect to the database:", err);
   });

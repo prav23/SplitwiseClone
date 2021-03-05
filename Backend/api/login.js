@@ -1,10 +1,25 @@
-const login = async(req, res) => {
-    // res.cookie('cookie',"admin",{maxAge: 900000, httpOnly: false, path : '/'});
-    // req.session.user = user;
-    res.writeHead(200,{
-        'Content-Type' : 'text/plain'
+const { User } = require("../models/user");
+
+const login = async (req, res) => {
+  // if(!req.body.name){
+  //   res.status(400).send({message : "Content cannot be empty"});
+  //   return;
+  // }
+  const user = {
+    name: "Praveen Anguru",
+    email: "fake-email@gmail.com",
+    hashedPassword: "hashedPassword",
+    token: "token"
+  };
+  User.create(user)
+    .then(data => {
+      res.send(data);
     })
-    res.end("Successful Login");
-}
+    .catch(err => {
+      res.status(500).send({
+        message : err.message || "some error occured while creating user"
+      });
+    });
+};
 
 module.exports = login;

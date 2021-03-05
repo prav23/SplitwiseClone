@@ -15,7 +15,7 @@ class Register extends Component {
       email: "",
       password: "",
       password2: "",
-      errors: {}
+      errors: {},
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -43,7 +43,7 @@ class Register extends Component {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
-      password2: this.state.password2
+      password2: this.state.password2,
     };
 
     console.log(newUser);
@@ -55,15 +55,12 @@ class Register extends Component {
     const { errors } = this.state;
 
     return (
-      <div className="register">
+      <div className="register pt-4">
         <div className="container">
           <div className="row">
             <br />
             <div className="col-md-5 m-auto">
-              <h2 className="display-8 text-center">Sign Up</h2>
-              <p className="lead text-center">
-                Create your Airbnb 0.1 account
-              </p>
+              <p className="lead text-center">Create your Splitwise account</p>
               <br />
               <form noValidate onSubmit={this.onSubmit}>
                 <TextFieldGroup
@@ -117,12 +114,12 @@ class Register extends Component {
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, { registerUser })(withRouter(Register));

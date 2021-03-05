@@ -31,40 +31,26 @@ class Navbar extends Component {
       </ul>
     );
 
-    const guestLinks = (
-      <ul className="navbar-nav ml-auto">
-        <li className="nav-item">
-          <Link className="nav-link" to="/">
-            Home
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/register" className="nav-link">
-            <p>
-              Sign Up <i className="fas fa-user-plus" />
-            </p>
-          </Link>
-        </li>
-      </ul>
-    );
-
+    // {isAuthenticated ? authLinks : guestLinks}
     return (
-      <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
-        <div className="container">
-          <p className="navbar-brand">Splitwise</p>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#mobile-nav"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-
-          <div className="collapse navbar-collapse" id="mobile-nav">
-            <ul className="navbar-nav ml-auto"></ul>
-
-            {isAuthenticated ? authLinks : guestLinks}
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            Splitwise
+          </a>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav w-100 d-flex justify-content-end">
+              <li class="nav-item">
+                <Link class="nav-link" to="/register">
+                  Register
+                </Link>
+              </li>
+              <li class="nav-item">
+                <Link class="nav-link" to="/login">
+                  Login
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
@@ -72,10 +58,8 @@ class Navbar extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  auth: state.auth
+const mapStateToProps = (state) => ({
+  auth: state.auth,
 });
 
-export default connect(mapStateToProps, { logoutUser })(
-  Navbar
-);
+export default connect(mapStateToProps, { logoutUser })(Navbar);
