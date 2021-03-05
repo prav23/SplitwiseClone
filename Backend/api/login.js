@@ -7,19 +7,24 @@ const login = async (req, res) => {
   // }
   const user = {
     name: "Praveen Anguru",
-    email: "fake-email@gmail.com",
+    email: "fake-email@gmail.com",  
     hashedPassword: "hashedPassword",
     token: "token"
   };
-  User.create(user)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message : err.message || "some error occured while creating user"
-      });
-    });
+  //res.send(user);
+  res.json({
+    success: true,
+    token: user.token
+  });
+  // User.create(user)
+  //   .then(data => {
+  //     res.send(data);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).send({
+  //       message : err.message || "some error occured while creating user"
+  //     });
+  //   });
 };
 
 module.exports = login;

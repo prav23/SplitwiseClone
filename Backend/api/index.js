@@ -1,11 +1,12 @@
 const express = require('express');
 const test = require('./test');
 const login = require('./login');
-const home = require('./home');
+const register = require('./register');
 const router = express.Router();
 
 router.get('/test', test);
 router.post('/login', login);
-router.get('/home', home);
+router.post('/register', register);
+//router.get('/login', login);
 
 module.exports = router;

@@ -5,7 +5,7 @@ import setAuthToken from "../utils/setAuthToken";
 //Register User
 export const registerUser = (userData, history) => dispatch => {
   axios
-    .post("http://localhost:3001/register", userData)
+    .post("http://localhost:3001/api/register", userData)
     .then(res => history.push("/login"))
     .catch(err =>
       dispatch({
@@ -18,7 +18,7 @@ export const registerUser = (userData, history) => dispatch => {
 //Login- Get User Token
 export const loginUser = userData => dispatch => {
   axios
-    .post("http://localhost:3001/login", userData)
+    .post("http://localhost:3001/api/login", userData)
     .then(res => {
       //Save to localStorage
       const { token } = res.data;
@@ -28,7 +28,7 @@ export const loginUser = userData => dispatch => {
       setAuthToken(token);
       
       // Set current user
-      dispatch(setCurrentUser({}));
+      dispatch(setCurrentUser(token));
     })
     .catch(err =>
       dispatch({

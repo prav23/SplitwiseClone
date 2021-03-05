@@ -5,8 +5,6 @@ var session = require("express-session");
 var cors = require("cors");
 var apiRoutes = require("./api");
 
-require("./config/sequelize");
-
 const app = express();
 app.use(
   bodyParser.urlencoded({
@@ -31,6 +29,9 @@ app.use(
     activeDuration: 5 * 60 * 1000,
   })
 );
+
+const db = require("./models");
+db.sequelize.sync();
 
 // Setup an express server and define port to listen all incoming requests for this application
 const setUpExpress = () => {
