@@ -40,16 +40,26 @@ class Navbar extends Component {
           </a>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav w-100 d-flex justify-content-end">
-              <li class="nav-item">
-                <Link class="nav-link" to="/register">
-                  Register
-                </Link>
-              </li>
-              <li class="nav-item">
-                <Link class="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
+                {
+                !isAuthenticated && <><li class="nav-item">
+                  <Link class="nav-link" to="/register">
+                    Register
+                  </Link>
+                </li>
+                <li class="nav-item">
+                  <Link class="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+                </>
+              }
+              {
+                isAuthenticated && <li class="nav-item">
+                  <Link class="nav-link" to="/">
+                    Logout
+                  </Link>
+                </li>
+              }
             </ul>
           </div>
         </div>

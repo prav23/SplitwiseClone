@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     token: {
       type: DataTypes.STRING,
     },
+  },
+  {
+    // https://sequelize.org/master/manual/model-basics.html#model-definition
+    timestamps: false,
   });
   User.associate = function (models) {
     // associations can be defined here
