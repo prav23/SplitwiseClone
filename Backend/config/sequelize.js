@@ -21,10 +21,11 @@
 //   });
 
 module.exports = {
-  HOST: "localhost",
+  HOST: "splitwise.c3fgcmxhqen1.us-east-2.rds.amazonaws.com",
+  PORT: 8000,
   USER: "root",
-  PASSWORD: "Sourcecode77",
-  DB: "splitwisedb",
+  PASSWORD: "root1234",
+  DB: "splitwise",
   dialect: "mysql",
   pool: {
     max: 5,
