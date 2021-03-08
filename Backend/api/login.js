@@ -2,8 +2,6 @@ const crypto = require("crypto");
 const { successResponse, errorResponse } = require("./helper");
 const { User } = require("../models");
 
-//import { Token, User } from "../../models";
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
