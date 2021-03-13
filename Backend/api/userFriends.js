@@ -54,8 +54,8 @@ const updateUserFriends = async (req, res) => {
         user_id,
       },
     });
-    if(userGroup !== null){
-      await userGroup.update({ friends_owe_map });
+    if(userFriends !== null){
+      await userFriends.update({ friends_owe_map });
     }
     else{
       throw new Error("userFriends doesnt exists for given user_id");

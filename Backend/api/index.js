@@ -1,17 +1,15 @@
 const express = require('express');
-const login = require('./login');
-const register = require('./register');
-const profile = require('./profiles');
 const user = require('./users');
+const groups = require('./groups');
 const expense = require('./expenses');
 const usergroups = require('./userGroups');
 const userfriends = require('./userFriends');
-const groups = require('./groups');
+const profile = require('./profiles');
 
 const router = express.Router();
 
-router.post('/login', login);
-router.post('/register', register);
+router.post('/login', user.login);
+router.post('/register', user.register);
 router.get('/users/:id',user.findUser);
 router.get('/users', user.findAllUsers);
 

@@ -3,7 +3,7 @@
 // const sequelize = new Sequelize(
 //   "splitwisedb",
 //   "root",
-//   "Sourcecode77",
+//   "",
 //   {
 //     host: "localhost",
 //     port: 3306,
