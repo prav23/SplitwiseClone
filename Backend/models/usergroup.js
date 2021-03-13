@@ -27,6 +27,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+    total_spent: {
+        type: DataTypes.DOUBLE,
+        defaultValue: 0.0
+    },
+    total_owed: {
+        type: DataTypes.DOUBLE,
+        defaultValue: 0.0
+    }
   },
   {
     // https://sequelize.org/master/manual/model-basics.html#model-definition

@@ -25,12 +25,12 @@ const findAllUsers = async (req, res) => {
 const findUser = async (req, res) => {
     try {
         //const Id = req.params.id;
-        const id = req.query.id;
+        const id = Number(req.params.id);
         //console.log(Id);
         console.log(id);
         //var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
         const user = await User.findOne({
-            where: { id : id}
+            where: { user_id : id}
         });
         if (user !== null) {
           return successResponse(req, res, { user });
