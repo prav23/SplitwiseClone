@@ -1,4 +1,3 @@
-// const crypto = require("crypto");
 const { successResponse, errorResponse } = require("./helper");
 const { User } = require("../models");
 
@@ -24,11 +23,7 @@ const findAllUsers = async (req, res) => {
 
 const findUser = async (req, res) => {
     try {
-        //const Id = req.params.id;
         const id = Number(req.params.id);
-        //console.log(Id);
-        console.log(id);
-        //var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
         const user = await User.findOne({
             where: { user_id : id}
         });
@@ -49,5 +44,4 @@ const findUser = async (req, res) => {
 
 
 module.exports = {findAllUsers, findUser};
-// module.exports =  findUser;
 

@@ -1,0 +1,69 @@
+const { successResponse, errorResponse } = require("./helper");
+const { UserFriends } = require("../models");
+
+const findUserFriendsByUser = async (req, res) => {
+  try {
+      const user_id = Number(req.params.user_id);
+      const userFriends = await UserFriends.findOne({
+          where: { user_id : user_id}
+      });
+      if (userFriends !== null) {
+        return successResponse(req, res, { userFriends });
+      } else {
+        return errorResponse(
+          req,
+          res,
+          "Unable to find an user groups",
+          401
+        );
+      }
+    } catch (error) {
+      return errorResponse(req, res, error.message);
+    }
+};
+
+const createUserFriends = async (req, res) => {
+  try {
+    const { user_id, friends_owe_map } = req.body;
+
+    const userFriends = await UserFriends.findOne({
+      where: {
+        user_id
+      },
+    });
+    if (userFriends) {
+      throw new Error("userFriends already exists with same user_id");
+    }
+    
+    const payload = {
+      user_id,
+      friends_owe_map,
+    };
+    const newUserFriend = await UserFriends.create(payload);
+    return successResponse(req, res, {}, 201);
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
+
+const updateUserFriends = async (req, res) => {
+  try {
+    const { user_id, friends_owe_map } = req.body;
+    const userFriends = await UserFriends.findOne({
+      where: {
+        user_id,
+      },
+    });
+    if(userGroup !== null){
+      await userGroup.update({ friends_owe_map });
+    }
+    else{
+      throw new Error("userFriends doesnt exists for given user_id");
+    }
+    return successResponse(req, res, {}, 201);
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
+
+module.exports = {findUserFriendsByUser, createUserFriends, updateUserFriends};
