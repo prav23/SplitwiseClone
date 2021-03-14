@@ -11,7 +11,7 @@ import {
 export const getCurrentProfile = () => dispatch => {
   dispatch(setProfileLoading());
   axios
-    .get("http://localhost:3001/profile")
+    .get("http://localhost:3001/api/profile")
     .then(res =>
       dispatch({
         type: GET_PROFILE,
@@ -29,7 +29,7 @@ export const getCurrentProfile = () => dispatch => {
 // Create Profile
 export const createProfile = (profileData, history) => dispatch => {
   axios
-    .post("http://localhost:3001/profile", profileData)
+    .post("http://localhost:3001/api/profile", profileData)
     .then(res => history.push("/dashboard"))
     .catch(err =>
       dispatch({

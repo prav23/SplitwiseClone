@@ -21,21 +21,22 @@ export const loginUser = userData => dispatch => {
     .post("http://localhost:3001/api/login", userData)
     .then(res => {
       //Save to localStorage
-      const { token } = res.data.data;
+      const { token, name, user_id } = res.data.data;
       //Set token to ls
       localStorage.setItem("authToken", token);
       //set token to Auth header
       setAuthToken(token);
       
       // Set current user
-      dispatch(setCurrentUser({token}));
+      dispatch(setCurrentUser({token, name, user_id}));
     })
-    .catch(err =>
+    .catch(err => {
+      console.log(err);
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
+      });
+    })
 };
 
 //Set Logged in user

@@ -9,19 +9,22 @@ const login = async (req, res) => {
       .createHash("md5")
       .update(password || "")
       .digest("hex");
-    const matchedUsers = await User.findAll({
+    const matchedUser = await User.findOne({
       where: { email, hashedPassword: encryptedPassword },
     });
-    if (matchedUsers.length === 1) {
-      // const user = matchedUsers[0];
-      // const newToken = await Token.create({
-      //   UserId: user.get("id"),
-      // });
+    if (matchedUser !== null) {
       const token = crypto
       .createHash("md5")
       .update(new Date().toDateString())
       .digest("hex");
-      return successResponse(req, res, { token }, 201);
+      
+      //const user = matchedUser[0];
+      const user_id = matchedUser.get("user_id");
+      const name = matchedUser.get("name");
+      const storeToken = await matchedUser.update({
+        token: token,
+      });
+      return successResponse(req, res, { token, name, user_id }, 201);
     } else {
       return errorResponse(
         req,
@@ -54,7 +57,7 @@ const register = async (req, res) => {
       hashedPassword: reqPass,
     };
     const newUser = await User.create(payload);
-    return successResponse(req, res, {}, 201);
+    return successResponse(req, res, { payload }, 201);
   } catch (error) {
     return errorResponse(req, res, error.message);
   }
