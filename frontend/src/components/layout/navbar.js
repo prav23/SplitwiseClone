@@ -47,6 +47,9 @@ class Navbar extends Component {
                       <li><Link class="nav-link" to="/editprofile">
                         Edit Profile
                       </Link></li>
+                      <li><Link class="nav-link" to="/creategroup">
+                        Create Group
+                      </Link></li>
                     </ul>
                   </div>
                 </li>

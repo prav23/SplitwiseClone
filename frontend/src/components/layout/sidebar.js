@@ -16,12 +16,12 @@ class Sidebar extends Component {
               <li><Link class="nav-link" to="/activity">
                 Activity
               </Link></li>
-              {/* <li><Link class="nav-link" to="/mygroups">
-                MyGroups
+              <li><Link class="nav-link" to="/mygroups">
+                My Groups
               </Link></li>
-              <li><Link class="nav-link" to="/friends">
+              <li><Link class="nav-link" to="/myfriends">
                 My Friends
-              </Link></li> */}
+              </Link></li>
             </ul>
           </div>
        </nav>

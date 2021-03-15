@@ -3,7 +3,8 @@ import axios from "axios";
 import {
   GET_EXPENSES,
   EXPENSE_LOADING,
-  CLEAR_EXPENSES   
+  CLEAR_EXPENSES,
+  GET_ERRORS   
 } from "./types";
 
 // Get Expense Details
@@ -24,6 +25,19 @@ export const getExpenses =  () => dispatch => {
       })
     );
 };
+
+// Create Expense
+export const createExpense = (expenseData, history) => dispatch => {
+    axios
+      .post("http://localhost:3001/api/expense", expenseData)
+      .then(res => history.push("/dashboard"))
+      .catch(err =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      );
+  };
 
 // Dashboard loading
 export const setExpenseLoading = () => {

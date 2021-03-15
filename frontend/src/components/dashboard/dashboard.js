@@ -20,10 +20,35 @@ class Dashboard extends Component {
     let friends_owe_map;
     let userGroupsList = [];
     let dashboardContent;
+    let youOweContent;
+    let youOwedContent;
+
     if(dashboardDetails !== null){
       console.log(dashboardDetails);
       friends_owe_map = Object.entries(dashboardDetails.data.userFriends.friends_owe_map);
       console.log(friends_owe_map);
+      youOweContent = (
+        <div class="col-sm ">
+          You Owe
+          {friends_owe_map.map( ([key, value]) => {
+            if(value > 0)
+              return <div> you owe User_ID {key} : ${value} </div>
+            else
+              return <div></div>
+          })}
+        </div>
+      );
+      youOwedContent = (
+        <div class="col-sm border-left py-2">
+          You are Owed
+          {friends_owe_map.map( ([key, value]) => {
+            if(value < 0)
+              return <div> User_ID {key} owes you : ${-value} </div>
+            else
+              return <div></div>
+          })}
+        </div>
+      );
     }
     if(userGroupDetails !== null){
       console.log(dashboardDetails);
@@ -40,31 +65,27 @@ class Dashboard extends Component {
         dashboardContent = (
             // <div>
             //     <p className="lead text-muted">
-            //     Dashboard {user.name}..!!
-            //     </p>
-            //     <p className="lead text-muted">
-            //     Friends: { friends_owe_map }
-            //     </p>
-            //     {/* <ProfileActions /> */}
-            //     <p className="lead text-muted">
-            //     User Groups
-            //     </p>
-            //     <p className="lead text-muted">
             //     {userGroupsList.map(ug => <div>{ug.user_id} {ug.group_id}  {ug.status} </div>)}
             //     </p>
             // </div>
+            <>
           <div class="row">
             <div class="col-sm border-right">
-              Total Balance
+              Total Balance : -2 USD
             </div>
             <div class="col-sm ">
-              You Owe
+              You Owe : 5 USD
             </div>
             <div class="col-sm border-left py-2">
-              You are Owed
+              You are Owed : 3USD
             </div>
           </div>
-            
+          
+          <div class="row">
+            { youOweContent }
+            { youOwedContent }
+          </div>
+        </>  
         );
     }
     return (

@@ -4,11 +4,12 @@ import authReducer from './authReducer';
 import profileReducer from './profileReducer';
 import dashboardReducer from './dashboardReducer';
 import expenseReducer from './expenseReducer';
-// import homeReducer from './homeReducer';
+import groupsReducer from './groupsReducer';
 
 export default combineReducers({
     auth:authReducer,
     profile: profileReducer,
     dashboard: dashboardReducer,
-    expense: expenseReducer
+    expense: expenseReducer,
+    groups: groupsReducer
 });
