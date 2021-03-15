@@ -15,7 +15,7 @@ class Dashboard extends Component {
 
   render() {
 
-    const { user } = this.props.auth;
+    const { isAuthenticated, user } = this.props.auth;
     const { dashboardDetails, userGroupDetails, dashboardloading } = this.props.dashboard;
     let friends_owe_map;
     let userGroupsList = [];
@@ -68,7 +68,7 @@ class Dashboard extends Component {
         );
     }
     return (
-      <div className="dashboard">
+      isAuthenticated && <div className="dashboard">
         <div className="container">
             <div className= "row mt-2 border-bottom">
               <div class = "col">
@@ -78,7 +78,27 @@ class Dashboard extends Component {
 
               </div>
               <div class = "col">
-                <button class = "btn btn-primary">Settle Up</button>
+                {/* <button class = "btn btn-primary">Settle Up</button> */}
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Settle Up
+                </button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Settle Up</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Add Settle Up Code Here
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             { dashboardContent }

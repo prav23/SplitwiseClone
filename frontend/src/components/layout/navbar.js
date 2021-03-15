@@ -10,7 +10,6 @@ class Navbar extends Component {
   }
   render() {
     const { isAuthenticated, user } = this.props.auth;
-
     return (
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -34,7 +33,6 @@ class Navbar extends Component {
               }
               {
                 isAuthenticated && <li class="nav-item">
-                  
                   <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     {user.name}
@@ -52,7 +50,6 @@ class Navbar extends Component {
                     </ul>
                   </div>
                 </li>
-                
               }
             </ul>
           </div>

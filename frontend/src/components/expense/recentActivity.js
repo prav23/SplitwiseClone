@@ -16,7 +16,7 @@ class Expenses extends Component {
 
   render() {
 
-    const { user } = this.props.auth;
+    const { isAuthenticated, user } = this.props.auth;
     const { expenseDetails, expenseLoading } = this.props.expense;
     let expenseList = [];
     if(expenseDetails){
@@ -71,9 +71,9 @@ class Expenses extends Component {
         }
     }
     return (
-    <main class="col-md-2 col-lg-10">
+        isAuthenticated && <main class="col-md-2 col-lg-10">
       <div class="align-items-center">
-        <h4 class="h2">Expenses List: Hello {user.name} ..!!</h4>
+        <h4 class="h2">Recent Expenses</h4>
         { recentActivityContent }
       </div>
     </main>
