@@ -2,13 +2,18 @@ import {
     GET_DASHBOARD_DETAILS,
     GET_USERGROUP_DETAILS,
     DASHBOARD_LOADING,
-    CLEAR_DASHBOARD_DETAILS
+    CLEAR_DASHBOARD_DETAILS,
+    GET_PROFILE,
+    PROFILE_LOADING,
+    CLEAR_CURRENT_PROFILE,
   } from '../actions/types';
   
   const initialState = {
     dashboardDetails: null,
     userGroupDetails: null,
-    dashboardLoading: false
+    dashboardLoading: false,
+    profile: null,
+    profileloading: false
   };
   
   export default function dashRed(state = initialState, action) {
@@ -35,6 +40,22 @@ import {
           dashboardDetails: null,
           userGroupDetails: null,
         };
+        case PROFILE_LOADING:
+          return {
+            ...state,
+            profileloading: true
+          };
+        case GET_PROFILE:
+          return {
+            ...state,
+            profile: action.payload,
+            profileloading: false
+          };
+        case CLEAR_CURRENT_PROFILE:
+          return {
+            ...state,
+            profile: null,
+          };
       default:
         return state;
     }

@@ -19,9 +19,6 @@ class Sidebar extends Component {
               <li><Link class="nav-link" to="/mygroups">
                 My Groups
               </Link></li>
-              <li><Link class="nav-link" to="/myfriends">
-                My Friends
-              </Link></li>
             </ul>
           </div>
        </nav>

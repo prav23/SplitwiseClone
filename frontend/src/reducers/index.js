@@ -1,15 +1,32 @@
 import {combineReducers} from 'redux';
 import authReducer from './authReducer';
 // import errorReducer from './errorReducer';
-import profileReducer from './profileReducer';
 import dashboardReducer from './dashboardReducer';
 import expenseReducer from './expenseReducer';
 import groupsReducer from './groupsReducer';
 
-export default combineReducers({
+// export default combineReducers({
+//     auth:authReducer,
+//     dashboard: dashboardReducer,
+//     expense: expenseReducer,
+//     groups: groupsReducer
+// });
+
+import { USER_LOGOUT } from '../actions/types';
+
+const appReducer = combineReducers({
+/* your app’s top-level reducers */
     auth:authReducer,
-    profile: profileReducer,
     dashboard: dashboardReducer,
     expense: expenseReducer,
     groups: groupsReducer
-});
+})
+  
+const rootReducer = (state, action) => {
+    if (action.type === USER_LOGOUT) {
+        state = undefined
+    }
+    return appReducer(state, action)
+}
+
+export default rootReducer;

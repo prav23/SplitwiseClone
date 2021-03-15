@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getDashboardDetails, getUserGroupDetails } from '../../actions/dashboardActions';
+import { getDashboardDetails, getUserGroupDetails, getCurrentProfile } from '../../actions/dashboardActions';
 import { Link } from "react-router-dom";
 
 class Dashboard extends Component {
@@ -10,6 +10,7 @@ class Dashboard extends Component {
     if(isAuthenticated){
       this.props.getDashboardDetails(user.user_id);
       this.props.getUserGroupDetails(user.user_id);
+      this.props.getCurrentProfile(user.user_id);
     }
   }
 
@@ -23,7 +24,7 @@ class Dashboard extends Component {
     let youOweContent;
     let youOwedContent;
 
-    if(dashboardDetails !== null){
+    if(dashboardDetails !== null && dashboardDetails.data.userFriends){
       console.log(dashboardDetails);
       friends_owe_map = Object.entries(dashboardDetails.data.userFriends.friends_owe_map);
       console.log(friends_owe_map);
@@ -140,4 +141,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getDashboardDetails, getUserGroupDetails })(Dashboard);
+export default connect(mapStateToProps, { getDashboardDetails, getUserGroupDetails, getCurrentProfile })(Dashboard);

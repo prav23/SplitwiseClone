@@ -7,16 +7,7 @@ const findUserFriendsByUser = async (req, res) => {
       const userFriends = await UserFriends.findOne({
           where: { user_id : user_id}
       });
-      if (userFriends !== null) {
-        return successResponse(req, res, { userFriends });
-      } else {
-        return errorResponse(
-          req,
-          res,
-          "Unable to find an user groups",
-          401
-        );
-      }
+      return successResponse(req, res, { userFriends });
     } catch (error) {
       return errorResponse(req, res, error.message);
     }

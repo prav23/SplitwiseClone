@@ -4,71 +4,44 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TextFieldGroup from '../common/TextFieldGroup';
 import SelectListGroup from '../common/SelectListGroup';
-import { createProfile,getCurrentProfile} from '../../actions/profileActions';
-import isEmpty from '../../validation/isEmpty';
+import { createProfile} from '../../actions/dashboardActions';
 
 class CreateProfile extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
-        name: '',
-        email: '',
-        image:'',
-        phoneNumber: '',
-        currency: '',
-        language: '',
-        timezone: '',
-        errors: {}
+      image:'',
+      phoneNumber: '',
+      currency: '',
+      language: '',
+      timezone: '',
+      errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     
   }
-  componentDidMount(){
-      this.props.getCurrentProfile();
-  }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.profile.profile) {
-        const profile = nextProps.profile.profile;
-  
-        // If profile field doesnt exist, make empty string
-        profile.name = !isEmpty(profile.gender) ? profile.gender : '';
-        profile.email = !isEmpty(profile.phonenumber) ? profile.phonenumber : '';
-        profile.image = !isEmpty(profile.city) ? profile.city : '';
-        profile.phoneNumber = !isEmpty(profile.about) ? profile.about : '';
-        profile.currency = !isEmpty(profile.country) ? profile.country : '';
-        profile.language = !isEmpty(profile.company) ? profile.company : '';
-        profile.timezone = !isEmpty(profile.languages) ? profile.languages : '';
-  
-        // Set component fields state
-        this.setState({
-          name: profile.name,
-          email: profile.email,
-          image: profile.image,
-          phoneNumber: profile.phoneNumber,
-          currency: profile.currency,
-          language: profile.language,
-          timezone: profile.timezone,
-        });
-      }
-}
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
 
   onSubmit(e) {
     e.preventDefault();
     
     const profileData = {
-        name: this.state.name,
-        email: this.state.email,
-        image: this.state.image,
-        phoneNumber: this.state.phoneNumber,
-        currency: this.state.currency,
-        language: this.state.language,
-        timezone: this.state.timezone,
+      user_id: this.props.auth.user.user_id,
+      image: this.state.image,
+      phoneNumber: this.state.phoneNumber,
+      currency: this.state.currency,
+      language: this.state.language,
+      timezone: this.state.timezone
     };
-    
+    console.log(profileData);
     this.props.createProfile(profileData, this.props.history);
   }
 
@@ -77,44 +50,44 @@ class CreateProfile extends Component {
   }
 
   render() {
-    
+    const { isAuthenticated } = this.props.auth;
     const { errors } = this.state;
     
     const currencyOptions = [
-        { label: '* Select Currency', value: '' },
-        { label: 'USD', value: 'USD' },
-        { label: 'KWD', value: 'KWD' },
-        { label: 'BHD', value: 'BHD' },
-        { label: 'GBP', value: 'GBP' },
-        { label: 'EUR', value: 'EUR' },
-        { label: 'CAD', value: 'CAD' },
-      ];
-  
-      const timezoneOptions = [
-        { label: '* Select Timezone', value: '' },
-        { label: 'America/Los_Angeles GMT-08:00', value: 'GMT-08:00' },
-        { label: 'Europe/Amsterdam GMT+01:00', value: 'GMT+01:00' },
-        { label: 'Asia/Calcutta GMT+05:30', value: 'GMT+05:30' },
-        { label: 'Australia/Adelaide GMT+09:30', value: 'GMT+09:30' },
-      ];
-  
-      const languageOptions = [
-        { label: '* Select Language', value: '' },
-        { label: 'English', value: 'English' },
-        { label: 'Hindi', value: 'Hindi' },
-        { label: 'Spanish', value: 'Spanish' },
-        { label: 'French', value: 'French' },
-        { label: 'Telugu', value: 'Telugu' },
-      ];
+      { label: '* Select Currency', value: '' },
+      { label: 'USD', value: 'USD' },
+      { label: 'KWD', value: 'KWD' },
+      { label: 'BHD', value: 'BHD' },
+      { label: 'GBP', value: 'GBP' },
+      { label: 'EUR', value: 'EUR' },
+      { label: 'CAD', value: 'CAD' },
+    ];
+
+    const timezoneOptions = [
+      { label: '* Select Timezone', value: '' },
+      { label: 'America/Los_Angeles GMT-08:00', value: 'GMT-08:00' },
+      { label: 'Europe/Amsterdam GMT+01:00', value: 'GMT+01:00' },
+      { label: 'Asia/Calcutta GMT+05:30', value: 'GMT+05:30' },
+      { label: 'Australia/Adelaide GMT+09:30', value: 'GMT+09:30' },
+    ];
+
+    const languageOptions = [
+      { label: '* Select Language', value: '' },
+      { label: 'English', value: 'English' },
+      { label: 'Hindi', value: 'Hindi' },
+      { label: 'Spanish', value: 'Spanish' },
+      { label: 'French', value: 'French' },
+      { label: 'Telugu', value: 'Telugu' },
+    ];
 
     return (
-      <div className="create-profile">
+      isAuthenticated && <div className="create-profile">
         <div className="container">
           <div className="row">
             <div className="col-md-5 m-auto">
-              <h2 className="display-8 text-center">Edit Your Profile</h2>
+              <h2 className="display-8 text-center">Create Your Profile</h2>
               <p className="lead text-center">
-                Update information about your profile
+                Let's get some information about your profile
               </p>
             
               <form onSubmit={this.onSubmit}>
@@ -128,7 +101,7 @@ class CreateProfile extends Component {
                 />
                 <SelectListGroup
                   placeholder="Language"
-                  name="languages"
+                  name="language"
                   value={this.state.language}
                   onChange={this.onChange}
                   options={languageOptions}
@@ -161,7 +134,6 @@ class CreateProfile extends Component {
                   error={errors.image}
                   info="Enter your image"
                 />
-                
                 <input
                   type="submit"
                   value="Submit"
@@ -178,15 +150,13 @@ class CreateProfile extends Component {
 
 
 CreateProfile.propTypes = {
-  createProfile:PropTypes.func.isRequired,
-  getCurrentProfile:PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile,
+  auth: state.auth,
   errors: state.errors
 });
 
-export default connect(mapStateToProps,{createProfile,getCurrentProfile})(withRouter(CreateProfile));
+export default connect(mapStateToProps,{createProfile})(withRouter(CreateProfile));

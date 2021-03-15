@@ -15,7 +15,7 @@ router.get('/users', user.findAllUsers);
 
 router.post('/profile', profile.createProfile);
 router.put('/profile', profile.updateProfile);
-router.get('/profile', profile.getProfile);
+router.get('/profile/:user_id', profile.getProfile);
 
 //router.get('/usergroups/:group_id/:user_id', usergroups.findUserGroupByGroupIdUserID);
 //router.get('/usergroups/group/:group_id', usergroups.findUserGroupsByGroupId);

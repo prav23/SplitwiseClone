@@ -4,18 +4,18 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TextFieldGroup from '../common/TextFieldGroup';
 import SelectListGroup from '../common/SelectListGroup';
-import { createProfile} from '../../actions/profileActions';
+import { updateProfile} from '../../actions/dashboardActions';
 
-class CreateProfile extends Component {
+class EditProfile extends Component {
   constructor(props) {
     super(props);
-    
+    const { profile } = this.props.dashboard;
     this.state = {
-      image:'',
-      phoneNumber: '',
-      currency: '',
-      language: '',
-      timezone: '',
+      image: profile.data.image ,
+      phoneNumber: profile.data.phoneNumber,
+      currency: profile.data.currency,
+      language: profile.data.language,
+      timezone: profile.data.timezone,
       errors: {}
     };
 
@@ -34,14 +34,15 @@ class CreateProfile extends Component {
     e.preventDefault();
     
     const profileData = {
+      user_id: this.props.auth.user.user_id,
       image: this.state.image,
       phoneNumber: this.state.phoneNumber,
       currency: this.state.currency,
       language: this.state.language,
       timezone: this.state.timezone
     };
-    
-    this.props.createProfile(profileData, this.props.history);
+    console.log(profileData);
+    this.props.updateProfile(profileData, this.props.history);
   }
 
   onChange(e) {
@@ -49,7 +50,7 @@ class CreateProfile extends Component {
   }
 
   render() {
-    
+    const { isAuthenticated } = this.props.auth;
     const { errors } = this.state;
     
     const currencyOptions = [
@@ -80,15 +81,11 @@ class CreateProfile extends Component {
     ];
 
     return (
-      <div className="create-profile">
+      isAuthenticated && <div className="edit-profile">
         <div className="container">
           <div className="row">
             <div className="col-md-5 m-auto">
-              <h2 className="display-8 text-center">Create Your Profile</h2>
-              <p className="lead text-center">
-                Let's get some information about your profile
-              </p>
-            
+              <h2 className="display-8 text-center">Update Your Profile</h2>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="Phone Number"
@@ -100,7 +97,7 @@ class CreateProfile extends Component {
                 />
                 <SelectListGroup
                   placeholder="Language"
-                  name="languages"
+                  name="language"
                   value={this.state.language}
                   onChange={this.onChange}
                   options={languageOptions}
@@ -148,14 +145,16 @@ class CreateProfile extends Component {
 }
 
 
-CreateProfile.propTypes = {
-  profile: PropTypes.object.isRequired,
+EditProfile.propTypes = {
+  auth: PropTypes.object.isRequired,
+  dashboard: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile,
+  auth: state.auth,
+  dashboard: state.dashboard,
   errors: state.errors
 });
 
-export default connect(mapStateToProps,{createProfile})(withRouter(CreateProfile));
+export default connect(mapStateToProps,{ updateProfile })(withRouter(EditProfile));

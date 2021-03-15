@@ -10,6 +10,9 @@ class Navbar extends Component {
   }
   render() {
     const { isAuthenticated, user } = this.props.auth;
+    const { profile } = this.props.dashboard;
+    const isProfile = profile != null ? true : false;
+    console.log(isProfile);
     return (
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -41,12 +44,12 @@ class Navbar extends Component {
                       <li><Link class="nav-link" to="/">
                         Logout
                       </Link></li>
-                      <li><Link class="nav-link" to="/createprofile">
+                      {!isProfile && <li><Link class="nav-link" to="/createprofile">
                         Create Profile
-                      </Link></li>
-                      <li><Link class="nav-link" to="/editprofile">
+                      </Link></li>}
+                      {isProfile && <li><Link class="nav-link" to="/editprofile">
                         Edit Profile
-                      </Link></li>
+                      </Link></li>}
                       <li><Link class="nav-link" to="/creategroup">
                         Create Group
                       </Link></li>
@@ -64,6 +67,7 @@ class Navbar extends Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  dashboard: state.dashboard,
 });
 
 export default connect(mapStateToProps, { logoutUser })(Navbar);

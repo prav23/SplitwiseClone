@@ -18,7 +18,7 @@ export const GET_GROUPS_DETAILS ='GET_GROUPS_DETAILS';
 export const GROUPS_LOADING ='GROUPS_LOADING';
 export const CLEAR_GROUPS ='CLEAR_GROUPS';
 
-
+export const USER_LOGOUT ='USER_LOGOUT';
 // export const GET_ALL_HOMES = 'GET_ALL_HOMES';
 // export const GET_OWNER_HOMES = 'GET_OWNER_HOMES';
 // export const OWNER_HOME_LOADING = 'OWNER_HOME_LOADING';

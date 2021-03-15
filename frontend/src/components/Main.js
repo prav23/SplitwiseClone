@@ -10,10 +10,9 @@ import Login from "./auth/login";
 import Dashboard from "./dashboard/dashboard";
 import Activity from "./expense/recentActivity";
 import MyGroups from "./groups/myGroups";
-import MyFriends from "./groups/myFriends";
 
-import CreateProfile from "./profile/createProfile";
-import EditProfile from "./profile/editProfile";
+import CreateProfile from "./dashboard/createProfile";
+import EditProfile from "./dashboard/editProfile";
 import CreateGroup from "./groups/createGroup";
 
 //Create a Main Component
@@ -36,7 +35,6 @@ class Main extends Component {
                     <Route path="/dashboard" component={Dashboard} />
                     <Route path="/activity" component={Activity} />
                     <Route path="/mygroups" component={MyGroups} />
-                    <Route path="/myfriends" component={MyFriends} />
 
                     <Route path="/createprofile" component={CreateProfile} />
                     <Route path="/editprofile" component={EditProfile} />

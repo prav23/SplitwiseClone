@@ -3,9 +3,9 @@ const { Profile } = require("../models");
 
 const createProfile = async (req, res) => {
     try {
-      const { image, phoneNumber, currency, language, timezone } = req.body;
-      const user_id = req.user.user_id;
-      console.log(user_id);
+      const { user_id, image, phoneNumber, currency, language, timezone } = req.body;
+      // const user_id = req.user.user_id;
+      // console.log(user_id);
       const profile = await Profile.findOne({
         where: {
           user_id,
@@ -44,7 +44,7 @@ const createProfile = async (req, res) => {
         else{
           throw new Error("profile doesnt exists for given user_id");
         }
-        return successResponse(req, res, {}, 201);
+        return successResponse(req, res, { profile }, 201);
       } catch (error) {
         return errorResponse(req, res, error.message);
       }
@@ -52,17 +52,14 @@ const createProfile = async (req, res) => {
   
   const getProfile = async (req, res) => {
     try {
-      //const { image, phoneNumber, currency, language, timezone } = req.body;
-      //console.log(req.user);
-      //const user_id = Number(req.params.id);
-      //const user_id = req.user.user_id;
-      const user_id = 1;
+      const user_id = Number(req.params.user_id);
+      console.log(user_id);
       const currentUserProfile = await Profile.findOne({
         where: {
           user_id,
         },
       });
-      if (profile) {
+      if (currentUserProfile) {
         return successResponse(req, res, currentUserProfile, 201);
       }
     } catch (error) {
