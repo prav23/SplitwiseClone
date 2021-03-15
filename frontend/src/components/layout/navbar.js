@@ -11,27 +11,6 @@ class Navbar extends Component {
   render() {
     const { isAuthenticated, user } = this.props.auth;
 
-    const authLinks = (
-      <ul className="navbar-nav ml-auto">
-        <li className="nav-item">
-          <p className="nav-link" to="/">
-            {user.name} <i className="fas fa-user-circle fa-lg" />
-          </p>
-        </li>
-        <li className="nav-item">
-          <a
-            href=""
-            onClick={this.onLogoutClick.bind(this)}
-            className="nav-link"
-          >
-            {" "}
-            Logout <i className="fas fa-sign-out-alt" />
-          </a>
-        </li>
-      </ul>
-    );
-
-    // {isAuthenticated ? authLinks : guestLinks}
     return (
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">

@@ -83,15 +83,6 @@ class CreateProfile extends Component {
       <div className="create-profile">
         <div className="container">
           <div className="row">
-            <div className="col-10">
-            </div>
-            <div className="col-2">
-              <Link to="/dashboard" className="btn btn-light">
-                Back to Dashboard
-              </Link>
-            </div>
-          </div>
-          <div className="row">
             <div className="col-md-5 m-auto">
               <h2 className="display-8 text-center">Create Your Profile</h2>
               <p className="lead text-center">

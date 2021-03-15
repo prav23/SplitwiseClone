@@ -17,8 +17,8 @@ router.post('/profile', profile.createProfile);
 router.put('/profile', profile.updateProfile);
 router.get('/profile', profile.getProfile);
 
-router.get('/usergroups/:group_id/:user_id', usergroups.findUserGroupByGroupIdUserID);
-router.get('/usergroups/group/:group_id', usergroups.findUserGroupsByGroupId);
+//router.get('/usergroups/:group_id/:user_id', usergroups.findUserGroupByGroupIdUserID);
+//router.get('/usergroups/group/:group_id', usergroups.findUserGroupsByGroupId);
 router.get('/usergroups/user/:user_id', usergroups.findUserGroupsByUserId);
 router.post('/usergroups', usergroups.createUserGroup);
 router.put('/usergroups', usergroups.updateUserGroup);

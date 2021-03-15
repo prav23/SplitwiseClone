@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getDashboardDetails } from '../../actions/dashboardActions';
+import { getDashboardDetails, getUserGroupDetails } from '../../actions/dashboardActions';
 import { Link } from "react-router-dom";
 
 class Dashboard extends Component {
@@ -9,18 +9,25 @@ class Dashboard extends Component {
     const { isAuthenticated, user } = this.props.auth;
     if(isAuthenticated){
       this.props.getDashboardDetails(user.user_id);
+      this.props.getUserGroupDetails(user.user_id);
     }
   }
 
   render() {
 
     const { user } = this.props.auth;
-    const { dashboardDetails, dashboardloading } = this.props.dashboard;
+    const { dashboardDetails, userGroupDetails, dashboardloading } = this.props.dashboard;
     let friends_owe_map;
+    let userGroupsList = [];
     let dashboardContent;
     if(dashboardDetails !== null){
       console.log(dashboardDetails);
       friends_owe_map = Object.entries(dashboardDetails.data.userFriends.friends_owe_map);
+      console.log(friends_owe_map);
+    }
+    if(userGroupDetails !== null){
+      console.log(dashboardDetails);
+      userGroupsList = userGroupDetails.data.userGroups;
       console.log(friends_owe_map);
     }
     if (dashboardloading) {
@@ -31,49 +38,52 @@ class Dashboard extends Component {
     </div>);
     } else {
         dashboardContent = (
-            <div>
-                <p className="lead text-muted">
-                Hello {user.name}..!!
-                </p>
-                <p className="lead text-muted">
-                Friends: { friends_owe_map }
-                </p>
-                {/* <ProfileActions /> */}
+            // <div>
+            //     <p className="lead text-muted">
+            //     Dashboard {user.name}..!!
+            //     </p>
+            //     <p className="lead text-muted">
+            //     Friends: { friends_owe_map }
+            //     </p>
+            //     {/* <ProfileActions /> */}
+            //     <p className="lead text-muted">
+            //     User Groups
+            //     </p>
+            //     <p className="lead text-muted">
+            //     {userGroupsList.map(ug => <div>{ug.user_id} {ug.group_id}  {ug.status} </div>)}
+            //     </p>
+            // </div>
+          <div class="row">
+            <div class="col-sm border-right">
+              Total Balance
             </div>
+            <div class="col-sm ">
+              You Owe
+            </div>
+            <div class="col-sm border-left py-2">
+              You are Owed
+            </div>
+          </div>
+            
         );
     }
     return (
       <div className="dashboard">
         <div className="container">
-          <div className="row">
-          <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-        <li><Link class="nav-link" to="/dashboard">
-            Dashboard
-          </Link></li>
-          <li><Link class="nav-link" to="/activity">
-            Activity
-          </Link></li>
-          <li><Link class="nav-link" to="/mygroups">
-            My Groups
-          </Link></li>
-          <li><Link class="nav-link" to="/friends">
-            My Friends
-          </Link></li>
-        </ul>
-      </div>
-    </nav>
+            <div className= "row mt-2 border-bottom">
+              <div class = "col">
+                <h3>Dashboard </h3>
+              </div>  
+              <div class = "col-6">
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard Hello {user.name} ..!!</h1>
-        { dashboardContent }
+              </div>
+              <div class = "col">
+                <button class = "btn btn-primary">Settle Up</button>
+              </div>
+            </div>
+            { dashboardContent }
+        </div>
       </div>
-    </main>
-  </div>
-</div>
-</div>
     );
   }
 }
@@ -89,4 +99,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getDashboardDetails })(Dashboard);
+export default connect(mapStateToProps, { getDashboardDetails, getUserGroupDetails })(Dashboard);
