@@ -29,7 +29,7 @@ export const getExpenses =  () => dispatch => {
 // Create Expense
 export const createExpense = (expenseData, history) => dispatch => {
     axios
-      .post("http://localhost:3001/api/expense", expenseData)
+      .post("http://localhost:3001/api/expenses", expenseData)
       .then(res => history.push("/dashboard"))
       .catch(err =>
         dispatch({

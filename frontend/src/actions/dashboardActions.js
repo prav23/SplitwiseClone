@@ -8,6 +8,8 @@ import {
   GET_PROFILE,
   PROFILE_LOADING,
   CLEAR_CURRENT_PROFILE,
+  GET_ALL_GROUPS,
+  GET_ALL_USERS,
   GET_ERRORS
 } from "./types";
 
@@ -113,6 +115,57 @@ export const createProfile = (profileData, history) => dispatch => {
 export const updateProfile = (profileData, history) => dispatch => {
   axios
     .put("http://localhost:3001/api/profile", profileData)
+    .then(res => history.push("/dashboard"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Get all Groups
+export const getAllGroups =  () => dispatch => {
+  dispatch(setDashboardLoading());
+  axios
+    .get(`http://localhost:3001/api/groups`)
+    .then(res =>
+      dispatch({
+        type: GET_ALL_GROUPS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ALL_GROUPS,
+        payload: {}
+      })
+    );
+};
+
+// Get all Users
+export const getAllUsers =  () => dispatch => {
+  dispatch(setDashboardLoading());
+  axios
+    .get(`http://localhost:3001/api/users`)
+    .then(res =>
+      dispatch({
+        type: GET_ALL_USERS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ALL_USERS,
+        payload: {}
+      })
+    );
+};
+
+// settleUp
+export const settleUp = (settleData, history) => dispatch => {
+  axios
+    .put("http://localhost:3001/api/userfriends/settle", settleData)
     .then(res => history.push("/dashboard"))
     .catch(err =>
       dispatch({

@@ -57,4 +57,27 @@ const updateUserFriends = async (req, res) => {
   }
 };
 
-module.exports = {findUserFriendsByUser, createUserFriends, updateUserFriends};
+const settleFriends = async (req, res) => {
+  try {
+    const { amount, settle_date, source_user_id, target_user_id } = req.body;
+    const userFriends = await UserFriends.findOne({
+      where: {
+        user_id : source_user_id
+      },
+    });
+    if (userFriends) {
+      // update friends_owe_map here
+      const friends_owe_map = { '1': source_user_id, '2': -6, '3': -1 };
+      
+      const updatedUserFriend = await userFriends.update( { friends_owe_map } );
+      return successResponse(req, res, { updatedUserFriend }, 201);
+    }
+    else{
+      throw new Error("userFriends row doesnt exists for given user_id");
+    }
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
+
+module.exports = {findUserFriendsByUser, createUserFriends, updateUserFriends, settleFriends};

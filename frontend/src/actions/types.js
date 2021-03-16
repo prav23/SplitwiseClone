@@ -16,7 +16,10 @@ export const CLEAR_EXPENSES ='CLEAR_EXPENSES';
 
 export const GET_GROUPS_DETAILS ='GET_GROUPS_DETAILS';
 export const GROUPS_LOADING ='GROUPS_LOADING';
-export const CLEAR_GROUPS ='CLEAR_GROUPS';
+export const CLEAR_GROUPS ='CLEAR_GROUPS'; 
+
+export const GET_ALL_GROUPS ='GET_ALL_GROUPS';
+export const GET_ALL_USERS ='GET_ALL_USERS';
 
 export const USER_LOGOUT ='USER_LOGOUT';
 // export const GET_ALL_HOMES = 'GET_ALL_HOMES';

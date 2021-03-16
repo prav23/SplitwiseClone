@@ -1,6 +1,8 @@
 import {
     GET_DASHBOARD_DETAILS,
     GET_USERGROUP_DETAILS,
+    GET_ALL_GROUPS,
+    GET_ALL_USERS,
     DASHBOARD_LOADING,
     CLEAR_DASHBOARD_DETAILS,
     GET_PROFILE,
@@ -11,6 +13,8 @@ import {
   const initialState = {
     dashboardDetails: null,
     userGroupDetails: null,
+    allGroups: null,
+    allUsers: null,
     dashboardLoading: false,
     profile: null,
     profileloading: false
@@ -34,6 +38,16 @@ import {
           ...state,
           userGroupDetails: action.payload,
         };
+      case GET_ALL_GROUPS:
+        return {
+          ...state,
+          allGroups: action.payload,
+        };
+        case GET_ALL_USERS:
+          return {
+            ...state,
+            allUsers: action.payload,
+          };
       case CLEAR_DASHBOARD_DETAILS:
         return {
           ...state,

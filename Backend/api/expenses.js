@@ -73,7 +73,6 @@ const createExpense = async (req, res) => {
         expense_date,
         user_id,
         group_id,
-        expense_date,
       };
       const newExpense = await Expense.create(payload);
       return successResponse(req, res, {}, 201);

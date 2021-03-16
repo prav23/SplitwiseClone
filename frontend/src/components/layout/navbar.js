@@ -53,6 +53,9 @@ class Navbar extends Component {
                       <li><Link class="nav-link" to="/creategroup">
                         Create Group
                       </Link></li>
+                      <li><Link class="nav-link" to="/groupActivity">
+                        Group
+                      </Link></li>
                     </ul>
                   </div>
                 </li>
