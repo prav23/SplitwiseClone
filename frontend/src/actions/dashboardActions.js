@@ -166,7 +166,7 @@ export const getAllUsers =  () => dispatch => {
 export const settleUp = (settleData, history) => dispatch => {
   axios
     .put("http://localhost:3001/api/userfriends/settle", settleData)
-    .then(res => history.push("/dashboard"))
+    .then(res => history.push("/dashboard#" + (new Date()).toISOString()))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

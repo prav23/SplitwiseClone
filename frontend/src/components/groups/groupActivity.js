@@ -58,18 +58,25 @@ class GroupExpenses extends Component {
   }
 
   render() {
-
+    console.log(this.props.match.params.groupId);
     const { user } = this.props.auth;
     const { expenseDetails, expenseLoading } = this.props.expense;
     const { errors } = this.state;
+    
 
     let groupExpenseList = [];
+    let sortedgroupExpenseList =[];
     if(expenseDetails){
         groupExpenseList = expenseDetails.data.allExpenses;
+        sortedgroupExpenseList = groupExpenseList.sort(function(a,b){
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(b.expense_date) - new Date(a.expense_date);
+        });
     }
     console.log(groupExpenseList);
     let groupActivityContent;
-
+  
     if (expenseLoading) {
         groupActivityContent = (<div>
         <p className="lead text-muted">
@@ -77,10 +84,10 @@ class GroupExpenses extends Component {
         </p>        
     </div>);
     } else {
-        if(groupExpenseList){
+        if(sortedgroupExpenseList){
             groupActivityContent = (
               <div class="list-group mt-2">
-                {groupExpenseList.map(exp => 
+                {sortedgroupExpenseList.map(exp => 
                 {
                 return (
                     <div key={ exp.expense_id } className="mb-2 border rounded">
@@ -163,6 +170,7 @@ class GroupExpenses extends Component {
                                   <TextFieldGroup
                                     placeholder="enter expense date"
                                     name="expense_date"
+                                    type="date"
                                     value={this.state.expense_date}
                                     onChange={this.onChange}
                                     error={errors.expense_date}

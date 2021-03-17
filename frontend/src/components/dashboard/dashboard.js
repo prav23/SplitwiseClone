@@ -34,7 +34,7 @@ class Dashboard extends Component {
   }
   onSubmit(e) {
     e.preventDefault();
-    
+    alert("I am here");
     const settleData = {
       source_user_id: this.state.source_user_id,
       target_user_id: this.state.target_user_id,
@@ -60,22 +60,22 @@ class Dashboard extends Component {
       friends_owe_map = Object.entries(dashboardDetails.data.userFriends.friends_owe_map);
       console.log(friends_owe_map);
       youOweContent = (
-        <div class="col-sm ">
+        <div class="col-sm border">
           You Owe
           {friends_owe_map.map( ([key, value]) => {
             if(value > 0)
-              return <div> you owe User_ID {key} : ${value} </div>
+              return <div class="col-sm border"> you owe User_ID {key} : ${value} </div>
             else
-              return <div></div>
+              return <div class="col-sm border"></div>
           })}
         </div>
       );
       youOwedContent = (
-        <div class="col-sm border-left py-2">
+        <div class="col-sm border py-2">
           You are Owed
           {friends_owe_map.map( ([key, value]) => {
             if(value < 0)
-              return <div> User_ID {key} owes you : ${-value} </div>
+              return <div class="col-sm border" > User_ID {key} owes you : ${-value} </div>
             else
               return <div></div>
           })}
@@ -101,14 +101,14 @@ class Dashboard extends Component {
             //     </p>
             // </div>
             <>
-          <div class="row">
-            <div class="col-sm border-right">
+          <div class="row p-2 mb-2">
+            <div class="col-sm border">
               Total Balance : -2 USD
             </div>
-            <div class="col-sm ">
+            <div class="col-sm border">
               You Owe : 5 USD
             </div>
-            <div class="col-sm border-left py-2">
+            <div class="col-sm border py-2">
               You are Owed : 3USD
             </div>
           </div>
@@ -122,7 +122,7 @@ class Dashboard extends Component {
     return (
       isAuthenticated && <div className="dashboard">
         <div className="container">
-            <div className= "row mt-2 border-bottom">
+            <div className= "row mt-2 border rounded p-2 mb-2">
               <div class = "col">
                 <h3>Dashboard </h3>
               </div>  
@@ -175,11 +175,7 @@ class Dashboard extends Component {
                                     onChange={this.onChange}
                                     info="Please enter settle_date"
                                   />
-                                  <input
-                                    type="submit"
-                                    value="Settle"
-                                    className="btn btn-info btn-block mt-4"
-                                  />
+                                  <button type="submit" className="btn btn-info btn-block mt-4"> Settle </button>
                                 </form>
                               </div>
                             </div>

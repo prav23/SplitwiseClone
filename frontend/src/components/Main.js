@@ -40,7 +40,7 @@ class Main extends Component {
                     <Route path="/createprofile" component={CreateProfile} />
                     <Route path="/editprofile" component={EditProfile} />
                     <Route path="/creategroup" component={CreateGroup} />
-                    <Route path="/groupActivity" component={GroupActivity} />
+                    <Route path="/groupActivity/:groupId" component={GroupActivity} />
                     
                     </div>
                 </div>                

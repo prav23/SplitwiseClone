@@ -18,6 +18,7 @@ class MyGroups extends Component {
 
     const { isAuthenticated, user } = this.props.auth;
     const { groupsDetails, groupsLoading } = this.props.groups;
+    const history = this.props.history;
     let groupsList = [];
     if(groupsDetails){
       groupsList = groupsDetails.data.userGroups;
@@ -54,6 +55,8 @@ class MyGroups extends Component {
                           <small>
                             Group Status :: { ug.status }
                           </small>
+                          <div></div>
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Go to Group :: { ug.group_id }</button>
                         </div>
                       );
                     }
