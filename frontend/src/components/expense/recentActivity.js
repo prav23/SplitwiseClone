@@ -18,9 +18,26 @@ class Expenses extends Component {
 
     const { isAuthenticated, user } = this.props.auth;
     const { expenseDetails, expenseLoading } = this.props.expense;
+    const { allGroups, allUsers, profile } = this.props.dashboard;
     let expenseList = [];
+    let sortedExpenseList = [];
+    let allGroupsList = [];
+    let allUsersList = [];
+    if(allGroups){
+      allGroupsList = allGroups.data.allGroups;
+    }
+    if(allUsersList){
+      allUsersList = allUsers.data.allUsers;
+    }
+    let currency = "USD";
+    if(profile){
+      currency = profile.data.currency;
+    }
     if(expenseDetails){
       expenseList = expenseDetails.data.allExpenses;
+      sortedExpenseList = expenseList.sort(function(a,b){
+        return new Date(b.expense_date) - new Date(a.expense_date);
+      });
     }
     console.log(expenseList);
     let recentActivityContent;
@@ -35,23 +52,18 @@ class Expenses extends Component {
         if(expenseList){
             recentActivityContent = (
                 <div class="list-group mt-2">
-                    {expenseList.map(exp => 
+                    {sortedExpenseList.map(exp => 
                     {
                     return (
                         <div key={ exp.expense_id } className="mb-2 border rounded">
                           <div class="d-flex w-100 justify-content-between">
-                            {/* <img
-                              class="img-thumbnail"
-                              style={{ height: "36px" }}
-                              src={countryInfo.flag}
-                            ></img> */}
                             <h5 class="mb-1">
-                              {user.name} added "{exp.description}" in Group X
+                            "{(allUsersList.find(x => x.user_id === exp.user_id)).name}" added "{exp.description}" in Group:: "{(allGroupsList.find(x => x.group_id === exp.group_id)).group_name}"
                             </h5>
                           </div>
-                          <p class="mb-1">Expense Amount {exp.amount}</p>
+                          <p class="mb-1">Expense Amount:: "{exp.amount}" { currency }</p>
                           <small>
-                            Date : { exp.expense_date }
+                            Expense Date :: { exp.expense_date.toString() }
                           </small>
                         </div>
                       );
@@ -84,12 +96,14 @@ class Expenses extends Component {
 Expenses.propTypes = {
   getExpenses: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  expense: PropTypes.object.isRequired
+  expense: PropTypes.object.isRequired,
+  dashboard: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   expense: state.expense,
-  auth: state.auth
+  auth: state.auth,
+  dashboard: state.dashboard,
 });
 
 export default connect(mapStateToProps, { getExpenses })(Expenses);

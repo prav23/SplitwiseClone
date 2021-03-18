@@ -45,13 +45,17 @@ class CreateGroup extends Component {
   render() {
     const { isAuthenticated } = this.props.auth;
     const { errors } = this.state;
-
+    const { allUsers } = this.props.dashboard;
+    let allUserList = [];
+    if(allUsers){
+      allUserList = allUsers.data.allUsers;
+    }
     return (
         isAuthenticated && <div className="create-group">
         <div className="container">
           <div className="row">
             <div className="col-md-5 m-auto">
-              <h2 className="display-8 text-center">Create Group</h2>
+              <h2 className="display-8 text-center">Create New Group</h2>
               
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
@@ -70,6 +74,11 @@ class CreateGroup extends Component {
                   error={errors.group_image}
                   info="Please add group_image name"
                 />
+                <select multiple class="form-select" id="multiple-select-friends">
+                  <option disabled selected value>Please Add Friends To Group </option>
+                  {allUserList.map(su => <option value = {su.user_id} > {su.name} </option>)}
+                </select>
+                
                 <input
                   type="submit"
                   value="Submit"
@@ -86,11 +95,13 @@ class CreateGroup extends Component {
 
 CreateGroup.propTypes = {
     auth: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
+    dashboard: PropTypes.object.isRequired,
   };
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
+  dashboard: state.dashboard,
 });
 
 export default connect(mapStateToProps,{createGroup})(withRouter(CreateGroup));

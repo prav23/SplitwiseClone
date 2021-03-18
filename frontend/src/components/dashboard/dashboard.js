@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getDashboardDetails, getUserGroupDetails, getCurrentProfile, getAllGroups, getAllUsers, settleUp } from '../../actions/dashboardActions';
-import { Link } from "react-router-dom";
 import TextFieldGroup from '../common/TextFieldGroup';
 
 class Dashboard extends Component {
@@ -34,7 +33,6 @@ class Dashboard extends Component {
   }
   onSubmit(e) {
     e.preventDefault();
-    alert("I am here");
     const settleData = {
       source_user_id: this.state.source_user_id,
       target_user_id: this.state.target_user_id,
@@ -46,27 +44,32 @@ class Dashboard extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
-
   render() {
-    const { isAuthenticated, user } = this.props.auth;
-    const { dashboardDetails, userGroupDetails, dashboardloading } = this.props.dashboard;
+    const { isAuthenticated } = this.props.auth;
+    const { dashboardDetails, dashboardloading, profile } = this.props.dashboard;
     let friends_owe_map;
-    let userGroupsList = [];
     let dashboardContent;
     let youOweContent;
     let youOwedContent;
+    let net_balance = 0, total_owe = 0, total_owed = 0;
+    let currency = "USD";
+    if(profile){
+      currency = profile.data.currency;
+    }
     if(dashboardDetails !== null && dashboardDetails.data.userFriends){
-      console.log(dashboardDetails);
+      // console.log(dashboardDetails);
       friends_owe_map = Object.entries(dashboardDetails.data.userFriends.friends_owe_map);
-      console.log(friends_owe_map);
+      // console.log(friends_owe_map);
+      friends_owe_map.map( ([key, value]) => value < 0 ? total_owe = total_owe - value : total_owed = total_owed + value);
+      net_balance = total_owed - total_owe;
       youOweContent = (
         <div class="col-sm border">
           You Owe
           {friends_owe_map.map( ([key, value]) => {
-            if(value > 0)
-              return <div class="col-sm border"> you owe User_ID {key} : ${value} </div>
+            if(value < 0)
+              return <div class="col-sm border"> you owe User_ID {key} : "{-value}" { currency } </div>
             else
-              return <div class="col-sm border"></div>
+              return <div></div>
           })}
         </div>
       );
@@ -74,18 +77,13 @@ class Dashboard extends Component {
         <div class="col-sm border py-2">
           You are Owed
           {friends_owe_map.map( ([key, value]) => {
-            if(value < 0)
-              return <div class="col-sm border" > User_ID {key} owes you : ${-value} </div>
+            if(value > 0)
+              return <div class="col-sm border" > User_ID {key} owes you : "{value}" { currency } </div>
             else
               return <div></div>
           })}
         </div>
       );
-    }
-    if(userGroupDetails !== null){
-      console.log(dashboardDetails);
-      userGroupsList = userGroupDetails.data.userGroups;
-      console.log(friends_owe_map);
     }
     if (dashboardloading) {
       dashboardContent = (<div>
@@ -95,21 +93,16 @@ class Dashboard extends Component {
     </div>);
     } else {
         dashboardContent = (
-            // <div>
-            //     <p className="lead text-muted">
-            //     {userGroupsList.map(ug => <div>{ug.user_id} {ug.group_id}  {ug.status} </div>)}
-            //     </p>
-            // </div>
-            <>
+        <>
           <div class="row p-2 mb-2">
             <div class="col-sm border">
-              Total Balance : -2 USD
+              Total Balance : {net_balance} { currency }
             </div>
             <div class="col-sm border">
-              You Owe : 5 USD
+              You Owe : {total_owe} { currency }
             </div>
             <div class="col-sm border py-2">
-              You are Owed : 3USD
+              You are Owed : {total_owed} { currency }
             </div>
           </div>
           <div class="row">
@@ -130,7 +123,6 @@ class Dashboard extends Component {
 
               </div>
               <div class = "col">
-                {/* <button class = "btn btn-primary">Settle Up</button> */}
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   Settle Up
                 </button>

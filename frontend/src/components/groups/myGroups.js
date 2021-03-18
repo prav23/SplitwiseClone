@@ -18,20 +18,23 @@ class MyGroups extends Component {
 
     const { isAuthenticated, user } = this.props.auth;
     const { groupsDetails, groupsLoading } = this.props.groups;
+    const { allGroups, profile } = this.props.dashboard;
     const history = this.props.history;
     let groupsList = [];
+    let allGroupsList = [];
     if(groupsDetails){
       groupsList = groupsDetails.data.userGroups;
+      allGroupsList = allGroups.data.allGroups;
     }
-    console.log(groupsList);
+    //console.log(groupsList);
     let myGroupsContent;
-
+  
     if (groupsLoading) {
-        myGroupsContent = (<div>
+      myGroupsContent = (<div>
         <p className="lead text-muted">
         My Groups Loading!!
         </p>        
-    </div>);
+      </div>);
     } else {
         if(groupsList){
             myGroupsContent = (
@@ -41,22 +44,27 @@ class MyGroups extends Component {
                     return (
                         <div key={ ug.id } className="mb-2 border rounded">
                           <div class="d-flex w-100 justify-content-between">
-                            {/* <img
-                              class="img-thumbnail"
-                              style={{ height: "36px" }}
-                              src={countryInfo.flag}
-                            ></img> */}
                             <h5 class="mb-1">
-                              Group Id :: { ug.group_id}
+                              Group Name :: { (allGroupsList.find(x => x.group_id === ug.group_id)).group_name}
                             </h5>
                           </div>
-                          <p class="mb-1">Total Spent in Group  { ug.total_spent }</p>
-                          <p class="mb-1">Total owed in Group by {user.name} is { ug.total_owed }</p>
-                          <small>
-                            Group Status :: { ug.status }
-                          </small>
-                          <div></div>
-                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Go to Group :: { ug.group_id }</button>
+                          <p class="mb-1">Total owed in Group by {user.name} is: "{ ug.total_owed }" { profile.data.currency }</p>
+                          <p class="mb-1">Group Status :: { ug.status }</p>
+                          <div>
+                          { ug.status === "Registered" && 
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Vist Group Page</button>
+                          }
+                          </div>
+                          <div>
+                          { ug.status === "Invited" && 
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Accept Group Invite</button>
+                          }
+                          </div>
+                          <div>
+                          { ug.total_owed === 0 && ug.status === "Registered" && 
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Leave Group</button>
+                          }
+                          </div>
                         </div>
                       );
                     }
@@ -88,12 +96,14 @@ class MyGroups extends Component {
 MyGroups.propTypes = {
   getGroupsDetails: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  groups: PropTypes.object.isRequired
+  groups: PropTypes.object.isRequired,
+  dashboard: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   groups: state.groups,
-  auth: state.auth
+  auth: state.auth,
+  dashboard: state.dashboard,
 });
 
 export default connect(mapStateToProps, { getGroupsDetails })(MyGroups);

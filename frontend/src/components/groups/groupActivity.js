@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getExpenses, createExpense } from '../../actions/expenseActions';
+import SelectListGroup from '../common/SelectListGroup';
 import { Link } from "react-router-dom";
 
 import TextFieldGroup from '../common/TextFieldGroup';
@@ -46,7 +47,7 @@ class GroupExpenses extends Component {
       description: this.state.description,
       expense_date: this.state.expense_date,
       user_id: this.state.user_id,
-      group_id: this.state.group_id,
+      group_id: Number(this.props.match.params.groupId),
       errors: {}
     };
     
@@ -58,23 +59,36 @@ class GroupExpenses extends Component {
   }
 
   render() {
-    console.log(this.props.match.params.groupId);
-    const { user } = this.props.auth;
     const { expenseDetails, expenseLoading } = this.props.expense;
+    const { allUsers, allGroups, profile } = this.props.dashboard;
     const { errors } = this.state;
     
+    let currency = "USD";
+    if(profile){
+      currency = profile.data.currency;
+    }
+    let allUsersList = [];
+    let allUserOptions = [];
+    if(allUsersList){
+      allUsersList = allUsers.data.allUsers;
+      allUsersList.map(su => allUserOptions.push({label: su.name, value: su.user_id}));
+    }
+    console.log(allUserOptions);
 
+    let allGroupsList = [];
+    if(allGroups){
+      allGroupsList = allGroups.data.allGroups;
+    }
     let groupExpenseList = [];
     let sortedgroupExpenseList =[];
     if(expenseDetails){
-        groupExpenseList = expenseDetails.data.allExpenses;
+        let allExpensesList = expenseDetails.data.allExpenses;
+        groupExpenseList = allExpensesList.filter(x => x.group_id === Number(this.props.match.params.groupId));
         sortedgroupExpenseList = groupExpenseList.sort(function(a,b){
-          // Turn your strings into dates, and then subtract them
-          // to get a value that is either negative, positive, or zero.
           return new Date(b.expense_date) - new Date(a.expense_date);
         });
     }
-    console.log(groupExpenseList);
+    //console.log(groupExpenseList);
     let groupActivityContent;
   
     if (expenseLoading) {
@@ -92,18 +106,13 @@ class GroupExpenses extends Component {
                 return (
                     <div key={ exp.expense_id } className="mb-2 border rounded">
                       <div class="d-flex w-100 justify-content-between">
-                        {/* <img
-                          class="img-thumbnail"
-                          style={{ height: "36px" }}
-                          src={countryInfo.flag}
-                        ></img> */}
                         <h5 class="mb-1">
-                          {user.name} added "{exp.description}" in Group X
+                        "{(allUsersList.find(x => x.user_id === exp.user_id)).name}" added "{exp.description}"
                         </h5>
                       </div>
-                      <p class="mb-1">Expense Amount {exp.amount}</p>
+                      <p class="mb-1">Expense Amount:: "{exp.amount}" { currency }</p>
                       <small>
-                        Date : { exp.expense_date }
+                        Expense Date :: { exp.expense_date.toString() }
                       </small>
                     </div>
                   );
@@ -127,7 +136,7 @@ class GroupExpenses extends Component {
       <div className="container">
         <div className= "row mt-2 border-bottom">
               <div class = "col">
-                <h4>Group: GroupName </h4>
+                <h4>Group: { (allGroupsList.find(x => x.group_id === Number(this.props.match.params.groupId))).group_name} </h4>
               </div>  
               <div class = "col-6">
 
@@ -176,21 +185,14 @@ class GroupExpenses extends Component {
                                     error={errors.expense_date}
                                     info="Please enter expense_date"
                                   />
-                                  <TextFieldGroup
+                                  <SelectListGroup
                                     placeholder="user_id"
                                     name="user_id"
-                                    value={this.state.timezone}
+                                    value={this.state.user_id}
                                     onChange={this.onChange}
+                                    options={allUserOptions}
                                     error={errors.user_id}
-                                    info="Please enter user_id"
-                                  />
-                                  <TextFieldGroup
-                                    placeholder="group_id"
-                                    name="group_id"
-                                    value={this.state.group_id}
-                                    onChange={this.onChange}
-                                    error={errors.group_id}
-                                    info="Enter your group_id"
+                                    info="Please Select Expense User"
                                   />
                                   <input
                                     type="submit"
@@ -223,13 +225,15 @@ GroupExpenses.propTypes = {
   getExpenses: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   expense: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  dashboard: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   expense: state.expense,
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
+  dashboard: state.dashboard,
 });
 
 export default connect(mapStateToProps, { getExpenses, createExpense})(GroupExpenses);

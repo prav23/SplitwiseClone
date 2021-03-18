@@ -12,7 +12,7 @@ class Navbar extends Component {
     const { isAuthenticated, user } = this.props.auth;
     const { profile } = this.props.dashboard;
     const isProfile = profile != null ? true : false;
-    console.log(isProfile);
+    //console.log(isProfile);
     return (
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -53,9 +53,9 @@ class Navbar extends Component {
                       <li><Link class="nav-link" to="/creategroup">
                         Create Group
                       </Link></li>
-                      <li><Link class="nav-link" to="/groupActivity">
+                      {/* <li><Link class="nav-link" to="/groupActivity">
                         Group
-                      </Link></li>
+                      </Link></li> */}
                     </ul>
                   </div>
                 </li>
