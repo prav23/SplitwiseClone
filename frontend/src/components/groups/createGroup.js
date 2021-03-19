@@ -13,7 +13,9 @@ class CreateGroup extends Component {
       group_name:'',
       group_image: '',
       user_ids: [],
-      errors: {}
+      errors: {},
+      file: null,
+      base64URL: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -29,14 +31,12 @@ class CreateGroup extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
     const groupData = {
       group_name: this.state.group_name,
-      group_image: this.state.group_image,
+      group_image: this.state.base64URL,
       user_id: this.props.auth.user.user_id,
       new_friend_user_ids: this.state.user_ids
     };
-    
     this.props.createGroup(groupData, this.props.history);
   }
 
@@ -49,6 +49,52 @@ class CreateGroup extends Component {
     console.log(value);
     this.setState({user_ids: value});
   }
+
+  handleFileInputChange = e => {
+    console.log(e.target.files[0]);
+    let { file } = this.state;
+
+    file = e.target.files[0];
+
+    this.getBase64(file)
+      .then(result => {
+        file["base64"] = result;
+        console.log("File Is", file);
+        this.setState({
+          base64URL: result,
+          file
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.setState({
+      file: e.target.files[0]
+    });
+  };
+
+  getBase64 = file => {
+    return new Promise(resolve => {
+      let fileInfo;
+      let baseURL = "";
+      // Make new FileReader
+      let reader = new FileReader();
+
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+
+      // on reader load somthing...
+      reader.onload = () => {
+        // Make a fileInfo Object
+        console.log("Called", reader);
+        baseURL = reader.result;
+        console.log(baseURL);
+        resolve(baseURL);
+      };
+      console.log(fileInfo);
+    });
+  };
 
   render() {
     const { isAuthenticated } = this.props.auth;
@@ -74,14 +120,17 @@ class CreateGroup extends Component {
                   error={errors.group_name}
                   info="Enter Group Name"
                 />
+
                 <TextFieldGroup
-                  placeholder="Group Image"
+                  placeholder="group_image"
+                  type="file"
                   name="group_image"
-                  value={this.state.group_image}
-                  onChange={this.onChange}
-                  error={errors.group_image}
-                  info="Please add group_image name"
+                  onChange={this.handleFileInputChange}
+                  info="Choose Group Image"
                 />
+
+                {/* <input className = "mb-2 mt-2 " type="file" name="file" onChange={this.handleFileInputChange} /> */}
+
                 <select multiple class="form-select" id="multiple-select-friends" onChange={this.handleChange}>
                   <option disabled selected value>Please Add Friends To Group </option>
                   {allUserList.map(su => <option value = {su.user_id} > {su.name} </option>)}

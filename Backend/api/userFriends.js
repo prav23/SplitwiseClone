@@ -15,22 +15,33 @@ const findUserFriendsByUser = async (req, res) => {
 
 const createUserFriends = async (req, res) => {
   try {
-    const { user_id, friends_owe_map } = req.body;
-
-    const userFriends = await UserFriends.findOne({
-      where: {
-        user_id
-      },
-    });
-    if (userFriends) {
-      throw new Error("userFriends already exists with same user_id");
-    }
-    
+    const { user_id, new_friend_user_ids } = req.body;
+    const friends_owe_map = [];
+    new_friend_user_ids.map(nfuid => friends_owe_map[nfuid] = 0);
     const payload = {
       user_id,
-      friends_owe_map,
-    };
+      friends_owe_map
+    }
     const newUserFriend = await UserFriends.create(payload);
+
+    // new friends maps are initialized
+    new_friend_user_ids.map(async (nfuid) => {
+      const userfriend = await UserFriends.findOne({
+        where: {
+          user_id : nfuid,
+        },
+      });
+      if (!userfriend) {
+        const new_friends_owe_map = {};
+        new_friends_owe_map[user_id] = 0;
+        new_friend_user_ids.map(nfid => new_friends_owe_map[nfid] = 0);
+        const payload = {
+          user_id : nfuid,
+          friends_owe_map : new_friends_owe_map,
+        }
+        const newUserFriend = await UserFriends.create(payload);
+      }
+    });
     return successResponse(req, res, {}, 201);
   } catch (error) {
     return errorResponse(req, res, error.message);
@@ -102,14 +113,47 @@ const settleFriends = async (req, res) => {
 
 const addExpenseUserFriends = async (req, res) => {
   try {
-    //const { source_user_id, target_user_id } = req.body;
-    const { user_id, group_id, groupUsersData, amount} = req.body;
+    const { user_id, groupUsersData, amount} = req.body;
     console.log(groupUsersData);
     //create friends_owe_map/ update friends_owe_map with the new expense for all users in the group
     // extract user_id's from groupUsersData
-    // const userFriendsRows = await UserFriends.findAll({
-    // });
+    let friends_owe_map = {};
+    const friendIds = groupUsersData.map(gu => gu.user_id).filter(uids => uids != user_id);
+    const friendsCount = friendIds.length;
+    let split;
+    if(friendsCount)
+      split = amount/friendsCount;
+    else
+      split = 0;
+    const userFriend = await UserFriends.findOne({
+      where: {
+        user_id
+      },
+    });
+    if (userFriend) {
+      // update userFriends map. split expense and add among friends equally.
+      friends_owe_map = userFriend.friends_owe_map;
+      friendIds.map(frId => friends_owe_map[frId] = friends_owe_map[frId] + split);
+      await UserFriends.update(
+        { friends_owe_map },
+        { where: { user_id } }
+      )
+      const userFriends = await UserFriends.findAll({
+        where: {
+          user_id : friendIds
+        }
+      });
+      userFriends.map(async (uf) => 
+        {
+          uf.friends_owe_map[user_id] = uf.friends_owe_map[user_id] - split;
+          await UserFriends.update(
+            { friends_owe_map : uf.friends_owe_map },
+            { where: { user_id: uf.user_id } }
+          )
+        });
+    }
     return successResponse(req, res, { }, 201);
+
   } catch (error) {
     return errorResponse(req, res, error.message);
   }

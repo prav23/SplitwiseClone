@@ -16,7 +16,9 @@ class EditProfile extends Component {
       currency: profile.data.currency,
       language: profile.data.language,
       timezone: profile.data.timezone,
-      errors: {}
+      errors: {},
+      file: null,
+      base64URL: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -35,7 +37,7 @@ class EditProfile extends Component {
     
     const profileData = {
       user_id: this.props.auth.user.user_id,
-      image: this.state.image,
+      image: this.state.base64URL,
       phoneNumber: this.state.phoneNumber,
       currency: this.state.currency,
       language: this.state.language,
@@ -48,6 +50,52 @@ class EditProfile extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
+
+  handleFileInputChange = e => {
+    console.log(e.target.files[0]);
+    let { file } = this.state;
+
+    file = e.target.files[0];
+
+    this.getBase64(file)
+      .then(result => {
+        file["base64"] = result;
+        console.log("File Is", file);
+        this.setState({
+          base64URL: result,
+          file
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.setState({
+      file: e.target.files[0]
+    });
+  };
+
+  getBase64 = file => {
+    return new Promise(resolve => {
+      let fileInfo;
+      let baseURL = "";
+      // Make new FileReader
+      let reader = new FileReader();
+
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+
+      // on reader load somthing...
+      reader.onload = () => {
+        // Make a fileInfo Object
+        console.log("Called", reader);
+        baseURL = reader.result;
+        console.log(baseURL);
+        resolve(baseURL);
+      };
+      console.log(fileInfo);
+    });
+  };
 
   render() {
     const { isAuthenticated } = this.props.auth;
@@ -122,13 +170,13 @@ class EditProfile extends Component {
                   error={errors.timezone}
                   info="Please select your timezone"
                 />
+                <img style = {{width:"200px",height:"200px"}} src={this.state.image} class="img-thumbnail" alt="..."/>
                 <TextFieldGroup
-                  placeholder="Image"
-                  name="image"
-                  value={this.state.image}
-                  onChange={this.onChange}
-                  error={errors.image}
-                  info="Enter your image"
+                  placeholder="group_image"
+                  type="file"
+                  name="group_image"
+                  onChange={this.handleFileInputChange}
+                  info="Choose Group Image"
                 />
                 <input
                   type="submit"

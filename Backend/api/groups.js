@@ -45,7 +45,7 @@ const findGroup = async (req, res) => {
 const createGroup = async (req, res) => {
   try {
     const { group_name, group_image, new_friend_user_ids } = req.body;
-    // update userGroup table with new friends here.
+    // update userGroup and userfriends table with new friends here.
     const group = await Group.findOne({
       where: {
         group_name,
@@ -59,6 +59,7 @@ const createGroup = async (req, res) => {
       group_image,
     };
     const newGroup = await Group.create(payload);
+    
     return successResponse(req, res, { newGroup }, 201);
   } catch (error) {
     return errorResponse(req, res, error.message);

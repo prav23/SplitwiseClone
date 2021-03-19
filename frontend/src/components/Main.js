@@ -14,6 +14,7 @@ import MyGroups from "./groups/myGroups";
 import CreateProfile from "./dashboard/createProfile";
 import EditProfile from "./dashboard/editProfile";
 import CreateGroup from "./groups/createGroup";
+import EditGroup from "./groups/editGroup";
 import GroupActivity from "./groups/groupActivity";
 
 //Create a Main Component
@@ -41,6 +42,7 @@ class Main extends Component {
                     <Route path="/editprofile" component={EditProfile} />
                     <Route path="/creategroup" component={CreateGroup} />
                     <Route path="/groupActivity/:groupId" component={GroupActivity} />
+                    <Route path="/editgroup/:groupId" component={EditGroup} />
                     
                     </div>
                 </div>                

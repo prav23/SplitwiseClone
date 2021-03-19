@@ -39,7 +39,6 @@ class Expenses extends Component {
         return new Date(b.expense_date) - new Date(a.expense_date);
       });
     }
-    console.log(expenseList);
     let recentActivityContent;
 
     if (expenseLoading) {

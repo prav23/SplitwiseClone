@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getGroupsDetails } from '../../actions/groupsActions';
-import { Link } from "react-router-dom";
+import axios from "axios";
 
 class MyGroups extends Component {
   componentDidMount() {
     const { isAuthenticated, user } = this.props.auth;
     if(isAuthenticated){
-      //this.props.getDashboardDetails(user.user_id);
-      //add getExpense from all groups user is part of code later
       this.props.getGroupsDetails(user.user_id);
     }
   }
@@ -26,10 +24,27 @@ class MyGroups extends Component {
       groupsList = groupsDetails.data.userGroups;
       allGroupsList = allGroups.data.allGroups;
     }
-    //console.log(groupsList);
+    let currency = "USD";
+    if(profile){
+      currency = profile.data.currency;
+    }
     let myGroupsContent;
     const handleLeaveGroup = ( group_id ) => {
       console.log(group_id, user.user_id);
+      axios.delete(`http://localhost:3001/api/usergroups/${group_id}/${user.user_id}`);
+      const ln = this.props.getGroupsDetails;
+      setTimeout(() => ln(user.user_id), 2000);
+    }
+    
+    const handleAcceptInvite = ( group_id ) => {
+      console.log(group_id, user.user_id);
+      const inviteUserGroupData = {
+        group_id,
+        user_id: user.user_id,
+      }
+      axios.put("http://localhost:3001/api/usergroups/groupinvite", inviteUserGroupData);
+      const ln = this.props.getGroupsDetails;
+      setTimeout(() => ln(user.user_id), 2000);
     }
     if (groupsLoading) {
       myGroupsContent = (<div>
@@ -50,7 +65,7 @@ class MyGroups extends Component {
                               Group Name :: { (allGroupsList.find(x => x.group_id === ug.group_id)).group_name}
                             </h5>
                           </div>
-                          <p class="mb-1">Total owed in Group by {user.name} is: "{ ug.total_owed }" { profile.data.currency }</p>
+                          <p class="mb-1">Total owed in Group by {user.name} is: "{ ug.total_owed }" { currency }</p>
                           <p class="mb-1">Group Status :: { ug.status }</p>
                           <div>
                           { ug.status === "Registered" && 
@@ -59,7 +74,7 @@ class MyGroups extends Component {
                           </div>
                           <div>
                           { ug.status === "Invited" && 
-                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Accept Group Invite</button>
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => handleAcceptInvite(ug.group_id)}> Accept Group Invite</button>
                           }
                           </div>
                           <div>

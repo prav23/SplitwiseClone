@@ -40,6 +40,19 @@ export const clearGroups = () => {
   };
 };
 
+// Update Group
+export const updateGroup = (groupData, history) => dispatch => {
+  axios
+    .put("http://localhost:3001/api/groups", groupData)
+    .then(res => history.push("/dashboard"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Create Group
 export const createGroup = (groupData, history) => dispatch => {
     axios
@@ -48,14 +61,13 @@ export const createGroup = (groupData, history) => dispatch => {
         const userGroupData = {
             user_id: groupData.user_id,
             group_id: res.data.data.newGroup.group_id,
-            status: "Registered",
-            total_spent: 0,
-            total_owed: 0,
+            new_friend_user_ids: groupData.new_friend_user_ids
           };
-          axios.post("http://localhost:3001/api/usergroups", userGroupData)
+          axios.post("http://localhost:3001/api/usergroups", userGroupData);
+          axios.post("http://localhost:3001/api/userfriends", userGroupData)
           .then( res => history.push("/dashboard"))
           .catch(err => history.push("/dashboard"));
-          
+        
         })
         .catch(err => {
           console.log(err);

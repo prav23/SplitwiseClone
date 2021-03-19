@@ -23,7 +23,7 @@ router.get('/usergroups/user/:user_id', usergroups.findUserGroupsByUserId);
 router.post('/usergroups', usergroups.createUserGroup);
 router.put('/usergroups/settle', usergroups.settleUserGroup);
 router.put('/usergroups/expense', usergroups.addExpenseUserGroup);
-//router.put('/usergroups', usergroups.updateUserGroup);
+router.put('/usergroups/groupinvite', usergroups.acceptUserGroupInvite);
 router.delete('/usergroups/:group_id/:user_id', usergroups.deleteUserGroupByGroupIdUserID);
 
 router.get('/groups/:id',groups.findGroup);

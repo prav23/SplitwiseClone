@@ -50,7 +50,7 @@ class GroupExpenses extends Component {
       expense_date: this.state.expense_date,
       user_id: Number(this.state.user_id),
       group_id: Number(this.props.match.params.groupId),
-      groupUsersData: Object.entries(this.props.groupActivity.groupUsersDetails.data.userGroups),
+      groupUsersData: this.props.groupActivity.groupUsersDetails.data.userGroups,
       errors: {}
     };
     
@@ -68,7 +68,7 @@ class GroupExpenses extends Component {
     const { expenseDetails, expenseLoading } = this.props.expense;
     const { allUsers, allGroups, profile } = this.props.dashboard;
     const { errors } = this.state;
-    
+    const history = this.props.history;
     let currency = "USD";
     if(profile){
       currency = profile.data.currency;
@@ -141,86 +141,87 @@ class GroupExpenses extends Component {
     <main class="col-md-2 col-lg-10">
       <div className="container">
         <div className= "row mt-2 border-bottom">
-              <div class = "col">
-                <h4>Group: { (allGroupsList.find(x => x.group_id === Number(this.props.match.params.groupId))).group_name} </h4>
-              </div>  
-              <div class = "col-6">
-
-              </div>
-              <div class = "col">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  Add Expense
-                </button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Expense</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div className="create-expense">
-                          <div className="container">
-                            <div className="row">
-                              <div className="col-md-5 m-auto">
-                                <h4 className="display-8 text-center">Add Expense</h4>
-                                
-                                <form onSubmit={this.onSubmit}>
-                                  <TextFieldGroup
-                                    placeholder="Expense Amount"
-                                    name="amount"
-                                    value={this.state.amount}
-                                    onChange={this.onChange}
-                                    error={errors.amount}
-                                    info="Enter expense amount"
-                                  />
-                                  <TextFieldGroup
-                                    placeholder="description"
-                                    name="description"
-                                    value={this.state.description}
-                                    onChange={this.onChange}
-                                    error={errors.description}
-                                    info="Please enter description"
-                                  />
-                                  <TextFieldGroup
-                                    placeholder="enter expense date"
-                                    name="expense_date"
-                                    type="date"
-                                    value={this.state.expense_date}
-                                    onChange={this.onChange}
-                                    error={errors.expense_date}
-                                    info="Please enter expense_date"
-                                  />
-                                  <SelectListGroup
-                                    placeholder="user_id"
-                                    name="user_id"
-                                    value={this.state.user_id}
-                                    onChange={this.onChange}
-                                    options={allUserOptions}
-                                    error={errors.user_id}
-                                    info="Please Select Expense User"
-                                  />
-                                  <input
-                                    type="submit"
-                                    value="Add Expense"
-                                    className="btn btn-info btn-block mt-4"
-                                  />
-                                </form>
-                              </div>
-                            </div>
-                          </div>
+          <img style = {{width:"100px",height:"100px"}} src={(allGroupsList.find(x => x.group_id === Number(this.props.match.params.groupId))).group_image} class="img-thumbnail" alt="..."/>  
+          <div class = "col">
+            <h5>Group: { (allGroupsList.find(x => x.group_id === Number(this.props.match.params.groupId))).group_name} </h5>
+          </div>
+        <div class = "col-6">
+          <button className="btn btn-primary btn-block mt-2 mb-2" onClick = {e => history.push(`/editgroup/${Number(this.props.match.params.groupId)}`)}> Edit Group Info</button>
+        </div>
+        <div class = "col">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Expense
+          </button>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add Expense</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div className="create-expense">
+                    <div className="container">
+                      <div className="row">
+                        <div className="col-md-5 m-auto">
+                          <h4 className="display-8 text-center">Add Expense</h4>
+                          
+                          <form onSubmit={this.onSubmit}>
+                            <TextFieldGroup
+                              placeholder="Expense Amount"
+                              name="amount"
+                              value={this.state.amount}
+                              onChange={this.onChange}
+                              error={errors.amount}
+                              info="Enter expense amount"
+                            />
+                            <TextFieldGroup
+                              placeholder="description"
+                              name="description"
+                              value={this.state.description}
+                              onChange={this.onChange}
+                              error={errors.description}
+                              info="Please enter description"
+                            />
+                            <TextFieldGroup
+                              placeholder="enter expense date"
+                              name="expense_date"
+                              type="date"
+                              value={this.state.expense_date}
+                              onChange={this.onChange}
+                              error={errors.expense_date}
+                              info="Please enter expense_date"
+                            />
+                            <SelectListGroup
+                              placeholder="user_id"
+                              name="user_id"
+                              value={this.state.user_id}
+                              onChange={this.onChange}
+                              options={allUserOptions}
+                              error={errors.user_id}
+                              info="Please Select Expense User"
+                            />
+                            <input
+                              type="submit"
+                              value="Add Expense"
+                              className="btn btn-info btn-block mt-4"
+                            />
+                          </form>
                         </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        {/* <button type="button" class="btn btn-primary">Save changes</button> */}
                       </div>
                     </div>
                   </div>
                 </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  {/* <button type="button" class="btn btn-primary">Save changes</button> */}
+                </div>
               </div>
             </div>
-        { groupActivityContent }
+          </div>
+        </div>
+      </div>
+          { groupActivityContent }
       </div>
     </main>
     );
