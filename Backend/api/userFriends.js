@@ -16,7 +16,7 @@ const findUserFriendsByUser = async (req, res) => {
 const createUserFriends = async (req, res) => {
   try {
     const { user_id, new_friend_user_ids } = req.body;
-    const friends_owe_map = [];
+    const friends_owe_map = {};
     new_friend_user_ids.map(nfuid => friends_owe_map[nfuid] = 0);
     const payload = {
       user_id,
@@ -122,7 +122,7 @@ const addExpenseUserFriends = async (req, res) => {
     const friendsCount = friendIds.length;
     let split;
     if(friendsCount)
-      split = amount/friendsCount;
+      split = amount/friendsCount+1;
     else
       split = 0;
     const userFriend = await UserFriends.findOne({
