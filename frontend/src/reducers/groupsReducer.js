@@ -1,11 +1,13 @@
 import {
     GET_GROUPS_DETAILS,
     GROUPS_LOADING,
+    GET_GROUP_USERS_DETAILS,
     CLEAR_GROUPS
   } from '../actions/types';
   
   const initialState = {
     groupsDetails: null,
+    groupUsersDetails: null,
     groupsLoading: false
   };
   
@@ -21,6 +23,11 @@ import {
           ...state,
           groupsDetails: action.payload,
           groupsLoading: false
+        };
+      case GET_GROUP_USERS_DETAILS:
+        return {
+          ...state,
+          groupUsersDetails: action.payload,
         };
       case CLEAR_GROUPS:
         return {

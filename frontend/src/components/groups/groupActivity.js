@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getExpenses, createExpense } from '../../actions/expenseActions';
+import { getGroupUsersDetails } from '../../actions/groupActivityActions';
 import SelectListGroup from '../common/SelectListGroup';
 import { Link } from "react-router-dom";
 
@@ -12,6 +13,8 @@ class GroupExpenses extends Component {
     const { isAuthenticated } = this.props.auth;
     if(isAuthenticated){
       this.props.getExpenses();
+      const group_id = Number(this.props.match.params.groupId);
+      this.props.getGroupUsersDetails(group_id);
     }
   }
   constructor(props) {
@@ -39,17 +42,22 @@ class GroupExpenses extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    
+    const jquery = window.$;
+    jquery("#exampleModal").modal("hide");
     const expenseData = {
       amount: this.state.amount,
       description: this.state.description,
       expense_date: this.state.expense_date,
       user_id: Number(this.state.user_id),
       group_id: Number(this.props.match.params.groupId),
+      groupUsersData: Object.entries(this.props.groupActivity.groupUsersDetails.data.userGroups),
       errors: {}
     };
     
     this.props.createExpense(expenseData, this.props.history);
+    //this.props.getExpenses();
+    const ln = this.props.getExpenses;
+    setTimeout(() => ln(), 2000);
   }
 
   onChange(e) {
@@ -232,6 +240,7 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   dashboard: state.dashboard,
+  groupActivity: state.groupActivity,
 });
 
-export default connect(mapStateToProps, { getExpenses, createExpense})(GroupExpenses);
+export default connect(mapStateToProps, { getExpenses, createExpense, getGroupUsersDetails})(GroupExpenses);

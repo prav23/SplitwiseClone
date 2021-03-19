@@ -21,7 +21,9 @@ router.get('/profile/:user_id', profile.getProfile);
 router.get('/usergroups/group/:group_id', usergroups.findUserGroupsByGroupId);
 router.get('/usergroups/user/:user_id', usergroups.findUserGroupsByUserId);
 router.post('/usergroups', usergroups.createUserGroup);
-router.put('/usergroups', usergroups.updateUserGroup);
+router.put('/usergroups/settle', usergroups.settleUserGroup);
+router.put('/usergroups/expense', usergroups.addExpenseUserGroup);
+//router.put('/usergroups', usergroups.updateUserGroup);
 router.delete('/usergroups/:group_id/:user_id', usergroups.deleteUserGroupByGroupIdUserID);
 
 router.get('/groups/:id',groups.findGroup);
@@ -37,6 +39,8 @@ router.delete('/expenses/:id', expense.deleteExpense);
 
 router.get('/userfriends/:user_id', userfriends.findUserFriendsByUser);
 router.put('/userfriends/settle', userfriends.settleFriends);
+router.put('/userfriends/expense', userfriends.addExpenseUserFriends);
+
 router.post('/userfriends', userfriends.createUserFriends);
 router.put('/userfriends', userfriends.updateUserFriends);
 

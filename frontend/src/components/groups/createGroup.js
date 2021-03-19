@@ -12,6 +12,7 @@ class CreateGroup extends Component {
     this.state = {
       group_name:'',
       group_image: '',
+      user_ids: [],
       errors: {}
     };
 
@@ -28,11 +29,12 @@ class CreateGroup extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    
+    console.log(this.state);
     const groupData = {
       group_name: this.state.group_name,
       group_image: this.state.group_image,
-      user_id: this.props.auth.user.user_id
+      user_id: this.props.auth.user.user_id,
+      new_friend_user_ids: this.state.user_ids
     };
     
     this.props.createGroup(groupData, this.props.history);
@@ -40,6 +42,12 @@ class CreateGroup extends Component {
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  handleChange = (e) => {
+    let value = Array.from(e.target.selectedOptions, option => option.value);
+    console.log(value);
+    this.setState({user_ids: value});
   }
 
   render() {
@@ -74,7 +82,7 @@ class CreateGroup extends Component {
                   error={errors.group_image}
                   info="Please add group_image name"
                 />
-                <select multiple class="form-select" id="multiple-select-friends">
+                <select multiple class="form-select" id="multiple-select-friends" onChange={this.handleChange}>
                   <option disabled selected value>Please Add Friends To Group </option>
                   {allUserList.map(su => <option value = {su.user_id} > {su.name} </option>)}
                 </select>

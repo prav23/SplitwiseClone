@@ -166,11 +166,18 @@ export const getAllUsers =  () => dispatch => {
 export const settleUp = (settleData, history) => dispatch => {
   axios
     .put("http://localhost:3001/api/userfriends/settle", settleData)
-    .then(res => history.push("/dashboard"))
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    );
+      .then(res => {
+        console.log(settleData);
+        axios.put("http://localhost:3001/api/usergroups/settle", settleData)
+        .then( res => history.push("/dashboard"))
+        .catch(err => history.push("/dashboard")); 
+    })
+    .catch(err => {
+      if (err.response && err.response.data) {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      }
+    });
 };

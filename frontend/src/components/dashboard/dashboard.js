@@ -34,8 +34,13 @@ class Dashboard extends Component {
     const settleData = {
       source_user_id: this.props.auth.user.user_id,
       target_user_id: this.state.target_user_id,
+      userGroupsMap: this.props.dashboard.userGroupDetails.data.userGroups
     };
     this.props.settleUp(settleData, this.props.history);
+    const jquery = window.$;
+    jquery("#exampleModal").modal("hide");
+    const ln = this.props.getDashboardDetails;
+    setTimeout(() => ln(settleData.source_user_id), 2000);
   }
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
@@ -60,6 +65,7 @@ class Dashboard extends Component {
       allUsersList.map(su => allUserOptions.push({label: su.name, value: su.user_id}));
     }
     if(dashboardDetails !== null && dashboardDetails.data.userFriends){
+      //console.log(this.props.dashboard.userGroupDetails.data);
       friends_owe_map = Object.entries(dashboardDetails.data.userFriends.friends_owe_map);
       friends_owe_map.map( ([key, value]) => value < 0 ? total_owe = total_owe - value : total_owed = total_owed + value);
       net_balance = total_owed - total_owe;

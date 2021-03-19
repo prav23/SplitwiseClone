@@ -4,7 +4,7 @@ import authReducer from './authReducer';
 import dashboardReducer from './dashboardReducer';
 import expenseReducer from './expenseReducer';
 import groupsReducer from './groupsReducer';
-
+import groupActivityReducer from './groupActivityReducer';
 // export default combineReducers({
 //     auth:authReducer,
 //     dashboard: dashboardReducer,
@@ -19,7 +19,8 @@ const appReducer = combineReducers({
     auth:authReducer,
     dashboard: dashboardReducer,
     expense: expenseReducer,
-    groups: groupsReducer
+    groups: groupsReducer,
+    groupActivity: groupActivityReducer,
 })
   
 const rootReducer = (state, action) => {

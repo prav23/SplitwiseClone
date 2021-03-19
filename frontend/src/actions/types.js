@@ -20,6 +20,7 @@ export const CLEAR_GROUPS ='CLEAR_GROUPS';
 
 export const GET_ALL_GROUPS ='GET_ALL_GROUPS';
 export const GET_ALL_USERS ='GET_ALL_USERS';
+export const GET_GROUP_USERS_DETAILS ='GET_GROUP_USERS_DETAILS';
 
 export const USER_LOGOUT ='USER_LOGOUT';
 // export const GET_ALL_HOMES = 'GET_ALL_HOMES';

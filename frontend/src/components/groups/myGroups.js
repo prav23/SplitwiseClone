@@ -28,7 +28,9 @@ class MyGroups extends Component {
     }
     //console.log(groupsList);
     let myGroupsContent;
-  
+    const handleLeaveGroup = ( group_id ) => {
+      console.log(group_id, user.user_id);
+    }
     if (groupsLoading) {
       myGroupsContent = (<div>
         <p className="lead text-muted">
@@ -62,7 +64,7 @@ class MyGroups extends Component {
                           </div>
                           <div>
                           { ug.total_owed === 0 && ug.status === "Registered" && 
-                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Leave Group</button>
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => handleLeaveGroup(ug.group_id)}> Leave Group</button>
                           }
                           </div>
                         </div>

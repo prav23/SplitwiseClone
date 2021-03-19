@@ -1,5 +1,6 @@
 const { successResponse, errorResponse } = require("./helper");
 const { UserGroup } = require("../models");
+const e = require("express");
 
 const deleteUserGroupByGroupIdUserID = async (req, res) => {
   try {
@@ -129,25 +130,67 @@ const createUserGroup = async (req, res) => {
   }
 };
 
-const updateUserGroup = async (req, res) => {
+const settleUserGroup = async (req, res) => {
   try {
-    const { user_id, group_id, status, total_owed } = req.body;
-    const userGroup = await UserGroup.findOne({
+    const { source_user_id, target_user_id, userGroupsMap} = req.body;   
+    const groupIds = userGroupsMap.map(ug => ug.group_id);
+    const userGroups = await UserGroup.findAll({
+      where: { 
+        group_id : groupIds,
+        user_id: [source_user_id, target_user_id],
+      }
+    });
+    const match_user_group_id = userGroups.map(ug => ({group_id: ug.group_id, user_id: ug.user_id}))
+    const group_id_user_id_map = {};
+    match_user_group_id.map(element => {
+      const { group_id, user_id } = element;
+      if(group_id_user_id_map[group_id]){
+        group_id_user_id_map[group_id].push(user_id);
+      }else{
+        group_id_user_id_map[group_id] = [user_id];
+      }
+    })
+    const reqGroupId = Object.entries(group_id_user_id_map).filter(([group_id, user_ids]) => user_ids.length == 2)[0][0];
+    const sourceUserGroupRow = await UserGroup.findOne({
       where: {
-        user_id,
-        group_id,
+        user_id : source_user_id,
+        group_id : reqGroupId
       },
     });
-    if(userGroup !== null){
-      await userGroup.update({ status, total_owed });
-    }
-    else{
-      throw new Error("userGroup doesnt exists for given user_id + group_id");
-    }
+    let total_owed = sourceUserGroupRow.total_owed;
+    total_owed = 20;
+    await UserGroup.update(
+      { total_owed },
+      { where: { user_id: source_user_id, group_id : reqGroupId }}
+      )
+    
+    const targetUserGroupRow = await UserGroup.findOne({
+      where: {
+        user_id : target_user_id,
+        group_id : reqGroupId
+      },
+    });
+    let total_owed_target = targetUserGroupRow.total_owed;
+    total_owed_target = 10;
+    await UserGroup.update(
+      { total_owed : total_owed_target},
+      { where: { user_id: target_user_id, group_id : reqGroupId }}
+      )
+      
     return successResponse(req, res, {}, 201);
   } catch (error) {
     return errorResponse(req, res, error.message);
   }
 };
 
-module.exports = {deleteUserGroupByGroupIdUserID, createUserGroup, updateUserGroup, findUserGroupsByGroupId, findUserGroupsByUserId, findUserGroupByGroupIdUserID};
+const addExpenseUserGroup = async (req, res) => {
+  try {
+    const { user_id, group_id, groupUsersData, amount} = req.body;
+    // for all group Users split the expense equally and update the total_owed section
+    return successResponse(req, res, {}, 201);
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
+
+module.exports = {deleteUserGroupByGroupIdUserID, createUserGroup, settleUserGroup, addExpenseUserGroup, findUserGroupsByGroupId, findUserGroupsByUserId, findUserGroupByGroupIdUserID};

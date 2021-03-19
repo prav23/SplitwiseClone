@@ -25,7 +25,7 @@ export const getGroupsDetails =  user_id => dispatch => {
         })
       );
   };
-  
+
 // Dashboard loading
 export const setGroupsLoading = () => {
   return {

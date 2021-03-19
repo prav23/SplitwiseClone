@@ -27,17 +27,38 @@ export const getExpenses =  () => dispatch => {
 };
 
 // Create Expense
+// export const createExpense = (expenseData, history) => dispatch => {
+//     axios
+//       .post("http://localhost:3001/api/expenses", expenseData)
+//       .then(res => history.push("/dashboard"))
+//       .catch(err =>
+//         dispatch({
+//           type: GET_ERRORS,
+//           payload: err.response.data
+//         })
+//       );
+//   };
+
+// add expense (update expense table, userFriends table and userGroups table too)
 export const createExpense = (expenseData, history) => dispatch => {
-    axios
-      .post("http://localhost:3001/api/expenses", expenseData)
-      .then(res => history.push("/dashboard"))
-      .catch(err =>
+  axios
+    .post("http://localhost:3001/api/expenses", expenseData)
+    .then(res => {
+      axios.put("http://localhost:3001/api/userfriends/expense", expenseData)
+      .then(res => {
+        console.log(expenseData);
+        axios.put("http://localhost:3001/api/usergroups/expense", expenseData)
+    })
+    })
+    .catch(err => {
+      if (err.response && err.response.data) {
         dispatch({
           type: GET_ERRORS,
           payload: err.response.data
         })
-      );
-  };
+      }
+    });
+};
 
 // Dashboard loading
 export const setExpenseLoading = () => {

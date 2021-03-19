@@ -60,6 +60,7 @@ const updateUserFriends = async (req, res) => {
 const settleFriends = async (req, res) => {
   try {
     const { source_user_id, target_user_id } = req.body;
+    
     const sourceUserFriendsRow = await UserFriends.findOne({
       where: {
         user_id : source_user_id
@@ -73,18 +74,23 @@ const settleFriends = async (req, res) => {
     if (targetUserFriendsRow) {
       // update targetUserFriendsMap here
       let friends_owe_map = targetUserFriendsRow.friends_owe_map;
-      friends_owe_map.set(source_user_id, 0);
-      const updatedtargetUserFriend = await targetUserFriendsRow.update( { friends_owe_map } );
+      friends_owe_map[source_user_id] = 0;
+      await UserFriends.update(
+        { friends_owe_map },
+        { where: { user_id: source_user_id } }
+      )
     }
     else{
       throw new Error("userFriends row update failed for given target_user_id");
     }
     if (sourceUserFriendsRow) {
-      // update sourceUserFriendsMap here
       let friends_owe_map = sourceUserFriendsRow.friends_owe_map;
-      friends_owe_map.set(target_user_id, 0);
-      const updatedsourceUserFriend = await sourceUserFriendsRow.update( { friends_owe_map } );
-      return successResponse(req, res, { updatedsourceUserFriend }, 201);
+      friends_owe_map[target_user_id] = 0;
+      await UserFriends.update(
+        { friends_owe_map },
+        { where: { user_id: target_user_id } }
+      )
+      return successResponse(req, res, { friends_owe_map }, 201);
     }
     else{
       throw new Error("userFriends row update failed for given source_user_id");
@@ -94,4 +100,19 @@ const settleFriends = async (req, res) => {
   }
 };
 
-module.exports = {findUserFriendsByUser, createUserFriends, updateUserFriends, settleFriends};
+const addExpenseUserFriends = async (req, res) => {
+  try {
+    //const { source_user_id, target_user_id } = req.body;
+    const { user_id, group_id, groupUsersData, amount} = req.body;
+    console.log(groupUsersData);
+    //create friends_owe_map/ update friends_owe_map with the new expense for all users in the group
+    // extract user_id's from groupUsersData
+    // const userFriendsRows = await UserFriends.findAll({
+    // });
+    return successResponse(req, res, { }, 201);
+  } catch (error) {
+    return errorResponse(req, res, error.message);
+  }
+};
+
+module.exports = {findUserFriendsByUser, createUserFriends, updateUserFriends, settleFriends, addExpenseUserFriends};
