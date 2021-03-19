@@ -59,21 +59,35 @@ const updateUserFriends = async (req, res) => {
 
 const settleFriends = async (req, res) => {
   try {
-    const { amount, settle_date, source_user_id, target_user_id } = req.body;
-    const userFriends = await UserFriends.findOne({
+    const { source_user_id, target_user_id } = req.body;
+    const sourceUserFriendsRow = await UserFriends.findOne({
       where: {
         user_id : source_user_id
       },
     });
-    if (userFriends) {
-      // update friends_owe_map here
-      const friends_owe_map = { '1': source_user_id, '2': -6, '3': -1 };
-      
-      const updatedUserFriend = await userFriends.update( { friends_owe_map } );
-      return successResponse(req, res, { updatedUserFriend }, 201);
+    const targetUserFriendsRow = await UserFriends.findOne({
+      where: {
+        user_id : target_user_id
+      }
+    });
+    if (targetUserFriendsRow) {
+      // update targetUserFriendsMap here
+      let friends_owe_map = targetUserFriendsRow.friends_owe_map;
+      friends_owe_map.set(source_user_id, 0);
+      const updatedtargetUserFriend = await targetUserFriendsRow.update( { friends_owe_map } );
     }
     else{
-      throw new Error("userFriends row doesnt exists for given user_id");
+      throw new Error("userFriends row update failed for given target_user_id");
+    }
+    if (sourceUserFriendsRow) {
+      // update sourceUserFriendsMap here
+      let friends_owe_map = sourceUserFriendsRow.friends_owe_map;
+      friends_owe_map.set(target_user_id, 0);
+      const updatedsourceUserFriend = await sourceUserFriendsRow.update( { friends_owe_map } );
+      return successResponse(req, res, { updatedsourceUserFriend }, 201);
+    }
+    else{
+      throw new Error("userFriends row update failed for given source_user_id");
     }
   } catch (error) {
     return errorResponse(req, res, error.message);

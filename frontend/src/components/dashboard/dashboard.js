@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getDashboardDetails, getUserGroupDetails, getCurrentProfile, getAllGroups, getAllUsers, settleUp } from '../../actions/dashboardActions';
-import TextFieldGroup from '../common/TextFieldGroup';
+import SelectListGroup from '../common/SelectListGroup';
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -20,8 +20,6 @@ class Dashboard extends Component {
     this.state = {
       source_user_id:'',
       target_user_id:'',
-      amount:'',
-      settle_date:'',
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -34,10 +32,8 @@ class Dashboard extends Component {
   onSubmit(e) {
     e.preventDefault();
     const settleData = {
-      source_user_id: this.state.source_user_id,
+      source_user_id: this.props.auth.user.user_id,
       target_user_id: this.state.target_user_id,
-      amount: this.state.amount,
-      settle_date: this.state.settle_date,
     };
     this.props.settleUp(settleData, this.props.history);
   }
@@ -46,7 +42,7 @@ class Dashboard extends Component {
   }
   render() {
     const { isAuthenticated } = this.props.auth;
-    const { dashboardDetails, dashboardloading, profile } = this.props.dashboard;
+    const { dashboardDetails, dashboardloading, profile, allUsers } = this.props.dashboard;
     let friends_owe_map;
     let dashboardContent;
     let youOweContent;
@@ -56,10 +52,15 @@ class Dashboard extends Component {
     if(profile){
       currency = profile.data.currency;
     }
+    let allUsersList = [];
+    let allUserOptions = [];
+    if(allUsers !== null && allUsers.data.allUsers){
+      allUsersList = allUsers.data.allUsers;
+      allUserOptions.push({ label: '* Select Friend', value: '' });
+      allUsersList.map(su => allUserOptions.push({label: su.name, value: su.user_id}));
+    }
     if(dashboardDetails !== null && dashboardDetails.data.userFriends){
-      // console.log(dashboardDetails);
       friends_owe_map = Object.entries(dashboardDetails.data.userFriends.friends_owe_map);
-      // console.log(friends_owe_map);
       friends_owe_map.map( ([key, value]) => value < 0 ? total_owe = total_owe - value : total_owed = total_owed + value);
       net_balance = total_owed - total_owe;
       youOweContent = (
@@ -139,33 +140,13 @@ class Dashboard extends Component {
                             <div className="row">
                               <div className="col-md-5 m-auto">                                
                                 <form onSubmit={this.onSubmit}>
-                                  <TextFieldGroup
-                                    placeholder="source_user_id"
-                                    name="source_user_id"
-                                    value={this.state.source_user_id}
-                                    onChange={this.onChange}
-                                    info="Enter source_user_id"
-                                  />
-                                  <TextFieldGroup
+                                  <SelectListGroup
                                     placeholder="target_user_id"
                                     name="target_user_id"
                                     value={this.state.target_user_id}
                                     onChange={this.onChange}
-                                    info="Please enter target_user_id"
-                                  />
-                                  <TextFieldGroup
-                                    placeholder="amount"
-                                    name="amount"
-                                    value={this.state.amount}
-                                    onChange={this.onChange}
-                                    info="Enter amount to settle"
-                                  />
-                                  <TextFieldGroup
-                                    placeholder="settle_date"
-                                    name="settle_date"
-                                    value={this.state.settle_date}
-                                    onChange={this.onChange}
-                                    info="Please enter settle_date"
+                                    options={allUserOptions}
+                                    info="Please Select Friend"
                                   />
                                   <button type="submit" className="btn btn-info btn-block mt-4"> Settle </button>
                                 </form>

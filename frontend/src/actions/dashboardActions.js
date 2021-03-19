@@ -162,11 +162,11 @@ export const getAllUsers =  () => dispatch => {
     );
 };
 
-// settleUp
+// settleUp (update userFriends table and userGroups table too)
 export const settleUp = (settleData, history) => dispatch => {
   axios
     .put("http://localhost:3001/api/userfriends/settle", settleData)
-    .then(res => history.push("/dashboard#" + (new Date()).toISOString()))
+    .then(res => history.push("/dashboard"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

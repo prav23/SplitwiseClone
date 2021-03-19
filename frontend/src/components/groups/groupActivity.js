@@ -11,8 +11,6 @@ class GroupExpenses extends Component {
   componentDidMount() {
     const { isAuthenticated } = this.props.auth;
     if(isAuthenticated){
-      //this.props.getDashboardDetails(user.user_id);
-      //add getExpense by group_id. code later
       this.props.getExpenses();
     }
   }
@@ -46,7 +44,7 @@ class GroupExpenses extends Component {
       amount: this.state.amount,
       description: this.state.description,
       expense_date: this.state.expense_date,
-      user_id: this.state.user_id,
+      user_id: Number(this.state.user_id),
       group_id: Number(this.props.match.params.groupId),
       errors: {}
     };
@@ -69,11 +67,11 @@ class GroupExpenses extends Component {
     }
     let allUsersList = [];
     let allUserOptions = [];
-    if(allUsersList){
+    if(allUsers.data){
       allUsersList = allUsers.data.allUsers;
+      allUserOptions.push({ label: '* Select Friend', value: '' });
       allUsersList.map(su => allUserOptions.push({label: su.name, value: su.user_id}));
     }
-    console.log(allUserOptions);
 
     let allGroupsList = [];
     if(allGroups){
