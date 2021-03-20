@@ -11,7 +11,7 @@ import {
 export const getExpenses =  () => dispatch => {
   dispatch(setExpenseLoading());
   axios
-    .get(`http://localhost:3001/api/expenses`)
+    .get(`http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/expenses`)
     .then(res =>
       dispatch({
         type: GET_EXPENSES,
@@ -29,7 +29,7 @@ export const getExpenses =  () => dispatch => {
 // Create Expense
 // export const createExpense = (expenseData, history) => dispatch => {
 //     axios
-//       .post("http://localhost:3001/api/expenses", expenseData)
+//       .post("http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/expenses", expenseData)
 //       .then(res => history.push("/dashboard"))
 //       .catch(err =>
 //         dispatch({
@@ -42,12 +42,12 @@ export const getExpenses =  () => dispatch => {
 // add expense (update expense table, userFriends table and userGroups table too)
 export const createExpense = (expenseData, history) => dispatch => {
   axios
-    .post("http://localhost:3001/api/expenses", expenseData)
+    .post("http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/expenses", expenseData)
     .then(res => {
-      axios.put("http://localhost:3001/api/userfriends/expense", expenseData)
+      axios.put("http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/userfriends/expense", expenseData)
       .then(res => {
         console.log(expenseData);
-        axios.put("http://localhost:3001/api/usergroups/expense", expenseData)
+        axios.put("http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/usergroups/expense", expenseData)
     })
     })
     .catch(err => {
