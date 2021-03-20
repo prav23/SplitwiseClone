@@ -18,6 +18,7 @@ const createUserFriends = async (req, res) => {
     const { user_id, new_friend_user_ids } = req.body;
     const friends_owe_map = {};
     new_friend_user_ids.map(nfuid => friends_owe_map[nfuid] = 0);
+    friends_owe_map[user_id] = 0;
     const payload = {
       user_id,
       friends_owe_map
@@ -114,17 +115,18 @@ const settleFriends = async (req, res) => {
 const addExpenseUserFriends = async (req, res) => {
   try {
     const { user_id, groupUsersData, amount} = req.body;
-    console.log(groupUsersData);
     //create friends_owe_map/ update friends_owe_map with the new expense for all users in the group
     // extract user_id's from groupUsersData
     let friends_owe_map = {};
     const friendIds = groupUsersData.map(gu => gu.user_id).filter(uids => uids != user_id);
     const friendsCount = friendIds.length;
+    console.log(friendsCount);
     let split;
     if(friendsCount)
-      split = amount/friendsCount+1;
+      split = amount/(friendsCount+1);
     else
       split = 0;
+    console.log(split);
     const userFriend = await UserFriends.findOne({
       where: {
         user_id
