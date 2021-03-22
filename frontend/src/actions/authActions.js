@@ -5,7 +5,7 @@ import setAuthToken from "../utils/setAuthToken";
 //Register User
 export const registerUser = (userData, history) => dispatch => {
   axios
-    .post("http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/register", userData)
+    .post("http://localhost:3001/api/register", userData)
     .then(res => history.push("/login"))
     .catch(err =>
       dispatch({
@@ -18,7 +18,7 @@ export const registerUser = (userData, history) => dispatch => {
 //Login- Get User Token
 export const loginUser = userData => dispatch => {
   axios
-    .post("http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/login", userData)
+    .post("http://localhost:3001/api/login", userData)
     .then(res => {
       //Save to localStorage
       const { token, name, user_id } = res.data.data;

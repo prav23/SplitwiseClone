@@ -7,7 +7,7 @@ import {
 // Get GroupUsers Details
 export const getGroupUsersDetails =  group_id => dispatch => {
   axios
-    .get(`http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/usergroups/group/${group_id}`)
+    .get(`http://localhost:3001/api/usergroups/group/${group_id}`)
     .then(res =>
       dispatch({
         type: GET_GROUP_USERS_DETAILS,

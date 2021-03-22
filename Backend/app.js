@@ -13,11 +13,11 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.use(cors({ origin: "http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3000", credentials: true }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use("/api", apiRoutes);
 
 //use cors to allow cross origin resource sharing
-// app.use(cors({ origin: 'http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3000', credentials: true }));
+// app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 //use express session to maintain session data
 app.use(

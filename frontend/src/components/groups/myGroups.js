@@ -31,7 +31,7 @@ class MyGroups extends Component {
     let myGroupsContent;
     const handleLeaveGroup = ( group_id ) => {
       console.log(group_id, user.user_id);
-      axios.delete(`http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/usergroups/${group_id}/${user.user_id}`);
+      axios.delete(`http://localhost:3001/api/usergroups/${group_id}/${user.user_id}`);
       const ln = this.props.getGroupsDetails;
       setTimeout(() => ln(user.user_id), 2000);
     }
@@ -42,7 +42,7 @@ class MyGroups extends Component {
         group_id,
         user_id: user.user_id,
       }
-      axios.put("http://ec2-18-220-206-127.us-east-2.compute.amazonaws.com:3001/api/usergroups/groupinvite", inviteUserGroupData);
+      axios.put("http://localhost:3001/api/usergroups/groupinvite", inviteUserGroupData);
       const ln = this.props.getGroupsDetails;
       setTimeout(() => ln(user.user_id), 2000);
     }
