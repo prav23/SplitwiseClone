@@ -1,5 +1,5 @@
 {
-  "name": "node_mysql",
+  "name": "backendmongdb",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -11,7 +11,7 @@
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "author": "viswanathKaddi",
+  "author": "PraveenAnguru",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
