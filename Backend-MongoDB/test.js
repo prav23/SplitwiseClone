@@ -8,17 +8,17 @@ chai.use(chaiHttp);
 var expect = chai.expect;
 
 it("Should register user successfully", function(done){
-    chai.request('http://18.222.187.40:3001')
+    chai.request('http://localhost:3001')
     .post('/register')
-    .send({ "name":"Raja","email": "raja@gmail.com", "password" : "abcdef","password2" : "abcdef"})
+    .send({ "name":"Raja","email": "raja@gmail.com", "password" : "abcdef" })
     .end(function (err, res) {
         expect(res).to.have.status(200);
         done();
     });
 })
 
-it("Should log in the traveller successfully", function(done){
-    chai.request('http://18.222.187.40:3001')
+it("Should log in the user successfully", function(done){
+    chai.request('http://localhost:3001')
     .post('/login')
     .send({ "email": "raja@gmail.com", "password" : "abcdef"})
     .end(function (err, res) {
@@ -27,13 +27,11 @@ it("Should log in the traveller successfully", function(done){
     });
 })
 
-
-it("Should log in the owner successfully", function(done){
-    chai.request('http://18.222.187.40:3001')
-    .post('/login')
-    .send({ "email": "raja@gmail.com", "password" : "abcdef"})
-    .end(function (err, res) {
-        expect(res).to.have.status(200);
+it("Should Fetch Users"), function(done){
+    chai.request("http://localhost:3001")
+    .get('/api/users')
+    .then((res) => {
+        expect(res.status).to.equal(200);
         done();
-    });
-})
+    })
+}

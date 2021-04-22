@@ -4,6 +4,7 @@ const passport = require("passport");
 const user = require('./users');
 const groups = require('./groups');
 const expense = require('./expenses');
+const expensecomments = require('./expensecomments');
 const usergroups = require('./userGroups');
 const userfriends = require('./userFriends');
 const profile = require('./profiles');
@@ -46,5 +47,7 @@ router.put('/userfriends/expense', passport.authenticate("jwt", { session: false
 router.post('/userfriends', passport.authenticate("jwt", { session: false }), userfriends.createUserFriends);
 router.put('/userfriends', passport.authenticate("jwt", { session: false }), userfriends.updateUserFriends);
 
+router.get('/expensecomments/:expense_id', expensecomments.findExpenseCommentsByExpense);
+router.post('/expensecomments', expensecomments.createExpenseComment);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express');
 const user = require('./users');
 const groups = require('./groups');
 const expense = require('./expenses');
+const expensecomments = require('./expensecomments');
 const usergroups = require('./userGroups');
 const userfriends = require('./userFriends');
 const profile = require('./profiles');
@@ -44,5 +45,7 @@ router.put('/userfriends/expense', userfriends.addExpenseUserFriends);
 router.post('/userfriends', userfriends.createUserFriends);
 router.put('/userfriends', userfriends.updateUserFriends);
 
+router.get('/expensecomments/:expense_id', expensecomments.findExpenseCommentsByExpense);
+router.post('/expensecomments', expensecomments.createExpenseComment);
 
 module.exports = router;
