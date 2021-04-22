@@ -47,11 +47,7 @@ const createUserFriends = async (req, res) => {
 const updateUserFriends = async (req, res) => {
   try {
     const { user_id, friends_owe_map } = req.body;
-    const userFriends = await UserFriends.findOne({
-      where: {
-        user_id,
-      },
-    });
+    const userFriends = await UserFriends.findOne({ user : user_id });
     if(userFriends !== null){
       await userFriends.update({ friends_owe_map });
     }
@@ -68,24 +64,19 @@ const settleFriends = async (req, res) => {
   try {
     const { source_user_id, target_user_id } = req.body;
     
-    const sourceUserFriendsRow = await UserFriends.findOne({
-      where: {
-        user_id : source_user_id
-      },
-    });
-    const targetUserFriendsRow = await UserFriends.findOne({
-      where: {
-        user_id : target_user_id
-      }
-    });
+    const sourceUserFriendsRow = await UserFriends.findOne({ user : source_user_id });
+    const targetUserFriendsRow = await UserFriends.findOne({ user : target_user_id });
     if (targetUserFriendsRow) {
       // update targetUserFriendsMap here
       let friends_owe_map = targetUserFriendsRow.friends_owe_map;
       friends_owe_map[source_user_id] = 0;
-      await UserFriends.update(
-        { friends_owe_map },
-        { where: { user_id: source_user_id } }
-      )
+      const uf = await UserFriends.findOne({user : source_user_id});
+      ufFields = {};
+      ufFields.user = source_user_id;
+      ufFields.friends_owe_map = friends_owe_map;  
+      if(uf !== null){
+        await uf.update(ufFields);
+      }
     }
     else{
       throw new Error("userFriends row update failed for given target_user_id");
@@ -93,10 +84,13 @@ const settleFriends = async (req, res) => {
     if (sourceUserFriendsRow) {
       let friends_owe_map = sourceUserFriendsRow.friends_owe_map;
       friends_owe_map[target_user_id] = 0;
-      await UserFriends.update(
-        { friends_owe_map },
-        { where: { user_id: target_user_id } }
-      )
+      const uf = await UserFriends.findOne({user : target_user_id});
+      ufFields = {};
+      ufFields.user = target_user_id;
+      ufFields.friends_owe_map = friends_owe_map;  
+      if(uf !== null){
+        await uf.update(ufFields);
+      }
       return successResponse(req, res, { friends_owe_map }, 201);
     }
     else{
@@ -122,31 +116,33 @@ const addExpenseUserFriends = async (req, res) => {
     else
       split = 0;
     console.log(split);
-    const userFriend = await UserFriends.findOne({
-      where: {
-        user_id
-      },
-    });
+    const userFriend = await UserFriends.findOne({ user : user_id });
     if (userFriend) {
       // update userFriends map. split expense and add among friends equally.
       friends_owe_map = userFriend.friends_owe_map;
       friendIds.map(frId => friends_owe_map[frId] = friends_owe_map[frId] + split);
-      await UserFriends.update(
-        { friends_owe_map },
-        { where: { user_id } }
-      )
-      const userFriends = await UserFriends.findAll({
-        where: {
-          user_id : friendIds
-        }
-      });
+
+      const uf = await UserFriends.findOne({user : user_id});
+      ufFields = {};
+      ufFields.user = user_id;
+      ufFields.friends_owe_map = friends_owe_map;  
+      if(uf !== null){
+        await uf.update(ufFields);
+      }
+
+      const userFriends = await UserFriends.find({ user_id : friendIds });
       userFriends.map(async (uf) => 
         {
           uf.friends_owe_map[user_id] = uf.friends_owe_map[user_id] - split;
-          await UserFriends.update(
-            { friends_owe_map : uf.friends_owe_map },
-            { where: { user_id: uf.user_id } }
-          )
+
+          const usfr = await UserFriends.findOne({user : uf.user_id});
+          ufFields = {};
+          ufFields.user = uf.user_id;
+          ufFields.friends_owe_map = uf.friends_owe_map;  
+          if(usfr !== null){
+            await usfr.update(ufFields);
+          }
+
         });
     }
     return successResponse(req, res, { }, 201);

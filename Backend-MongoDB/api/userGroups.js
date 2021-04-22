@@ -5,22 +5,12 @@ const e = require("express");
 
 const deleteUserGroupByGroupIdUserID = async (req, res) => {
   try {
-      const group_id = Number(req.params.group_id);
-      const user_id = Number(req.params.user_id);
+      const group_id = req.params.group_id;
+      const user_id = req.params.user_id;
 
-      const userGroup = await UserGroup.findOne({
-          where: { 
-            user_id : user_id,
-            group_id : group_id
-          }
-      });
+      const userGroup = await UserGroup.findOne({ user : user_id, group : group_id });
       if (userGroup !== null) {
-        await UserGroup.destroy({
-          where: {
-            user_id,
-            group_id,
-          },
-        });
+        await UserGroup.deleteOne({ user : user_id, group : group_id });
         return successResponse(req, res, { });
       } else {
         return errorResponse(
@@ -37,10 +27,8 @@ const deleteUserGroupByGroupIdUserID = async (req, res) => {
 
 const findUserGroupsByGroupId = async (req, res) => {
   try {
-      const group_id = Number(req.params.group_id);
-      const userGroups = await UserGroup.findAll({
-          where: { group_id : group_id}
-      });
+      const group_id = req.params.group_id;
+      const userGroups = await UserGroup.findAll({ group : group_id });
       if (userGroups !== null) {
         return successResponse(req, res, { userGroups });
       } else {
@@ -58,10 +46,8 @@ const findUserGroupsByGroupId = async (req, res) => {
 
 const findUserGroupsByUserId = async (req, res) => {
   try {
-      const user_id = Number(req.params.user_id);
-      const userGroups = await UserGroup.findAll({
-          where: { user_id : user_id}
-      });
+      const user_id = req.params.user_id;
+      const userGroups = await UserGroup.find({ user : user_id });
       if (userGroups !== null) {
         return successResponse(req, res, { userGroups });
       } else {
@@ -79,15 +65,10 @@ const findUserGroupsByUserId = async (req, res) => {
 
 const findUserGroupByGroupIdUserID = async (req, res) => {
   try {
-      const group_id = Number(req.params.group_id);
-      const user_id = Number(req.params.user_id);
+      const group_id = req.params.group_id;
+      const user_id = req.params.user_id;
 
-      const userGroup = await UserGroup.findOne({
-          where: { 
-            user_id : user_id,
-            group_id : group_id
-          }
-      });
+      const userGroup = await UserGroup.findOne({ user : user_id, group : group_id });
       if (userGroup !== null) {
         return successResponse(req, res, { userGroup });
       } else {
@@ -106,29 +87,24 @@ const findUserGroupByGroupIdUserID = async (req, res) => {
 const createUserGroup = async (req, res) => {
   try {
     const { user_id, group_id, new_friend_user_ids } = req.body;
-    // group creation user is registered     
-    const payload = {
-      user_id,
-      group_id,
-      status: "Registered",
-      total_spent : 0,
-      total_owed : 0,
-    };
-    const newUserGroup = await UserGroup.create(payload);
+    // group creation user is registered
+    const ugFields = {};
+    ugFields.user = user_id;
+    ugFields.group = group_id;
+    ugFields.status = "Registered";
+    ugFields.total_spent = 0;
+    ugFields.total_owed = 0;
+    
+    const newUserGroup = await UserGroup.create(ugFields);
     // group user new friends are invited
     new_friend_user_ids.map(async (nfuid) => {
-      const userGroup = await UserGroup.findOne({
-        where: {
-          user_id : nfuid,
-          group_id,
-        },
-      });
+      const userGroup = await UserGroup.findOne({ user : nfuid, group : group_id});
       if (userGroup) {
         throw new Error("userGroup already exists with same user_id + group_id");
       }
       const payload = {
-        user_id: nfuid,
-        group_id,
+        user: nfuid,
+        group: group_id,
         status: "Invited",
         total_spent : 0,
         total_owed : 0,
@@ -144,17 +120,9 @@ const createUserGroup = async (req, res) => {
 const acceptUserGroupInvite = async (req, res) => {
   try {
     const { user_id, group_id} = req.body;   
-    const userGroup = await UserGroup.findOne({
-      where: { 
-        group_id,
-        user_id,
-      }
-    });
+    const userGroup = await UserGroup.findOne({ group : group_id, user : user_id });
     const status = "Registered";
-    await UserGroup.update(
-      { status },
-      { where: { user_id: user_id, group_id : group_id }}
-    )
+    await userGroup.update({ status });
     return successResponse(req, res, { }, 201);
   } catch (error) {
     return errorResponse(req, res, error.message);
@@ -165,13 +133,9 @@ const settleUserGroup = async (req, res) => {
   try {
     const { source_user_id, target_user_id, userGroupsMap} = req.body;   
     const groupIds = userGroupsMap.map(ug => ug.group_id);
-    const userGroups = await UserGroup.findAll({
-      where: { 
-        group_id : groupIds,
-        user_id: [source_user_id, target_user_id],
-      }
-    });
-    const match_user_group_id = userGroups.map(ug => ({group_id: ug.group_id, user_id: ug.user_id}))
+    const userGroups = await UserGroup.find({ group : groupIds, user : [source_user_id, target_user_id] });
+
+    const match_user_group_id = userGroups.map(ug => ({group : ug.group_id, user : ug.user_id}));
     const group_id_user_id_map = {};
     match_user_group_id.map(element => {
       const { group_id, user_id } = element;
@@ -182,31 +146,15 @@ const settleUserGroup = async (req, res) => {
       }
     })
     const reqGroupId = Object.entries(group_id_user_id_map).filter(([group_id, user_ids]) => user_ids.length == 2)[0][0];
-    const sourceUserGroupRow = await UserGroup.findOne({
-      where: {
-        user_id : source_user_id,
-        group_id : reqGroupId
-      },
-    });
+    const sourceUserGroupRow = await UserGroup.findOne({ user : source_user_id, group : reqGroupId });
     let total_owed = sourceUserGroupRow.total_owed;
     total_owed = 0;
-    await UserGroup.update(
-      { total_owed },
-      { where: { user_id: source_user_id, group_id : reqGroupId }}
-      )
+    await sourceUserGroupRow.update( { total_owed } )
     
-    const targetUserGroupRow = await UserGroup.findOne({
-      where: {
-        user_id : target_user_id,
-        group_id : reqGroupId
-      },
-    });
+    const targetUserGroupRow = await UserGroup.findOne({ user_id : target_user_id, group_id : reqGroupId });
     let total_owed_target = targetUserGroupRow.total_owed;
     total_owed_target = 0;
-    await UserGroup.update(
-      { total_owed : total_owed_target},
-      { where: { user_id: target_user_id, group_id : reqGroupId }}
-      )
+    await targetUserGroupRow.update( { total_owed : total_owed_target} )
       
     return successResponse(req, res, {}, 201);
   } catch (error) {
@@ -226,17 +174,9 @@ const addExpenseUserGroup = async (req, res) => {
     else
       split = 0;
     friendIds.map(async (frId) => {
-      const fug = await UserGroup.findOne({
-        where: { 
-          user_id : frId,
-          group_id
-        }
-      });
+      const fug = await UserGroup.findOne({ user : frId, group : group_id });
       const fug_tot_owed = fug.total_owed;
-      await UserGroup.update(
-        { total_owed : fug_tot_owed - split},
-        { where: { user_id: frId, group_id : group_id }}
-        )
+      await fug.update( { total_owed : fug_tot_owed - split} )
     });
     const ug = await UserGroup.findOne({
       where: { 
@@ -245,10 +185,7 @@ const addExpenseUserGroup = async (req, res) => {
       }
     });
     const tot_owed = ug.total_owed;
-    await UserGroup.update(
-      { total_owed : tot_owed + split*(friendsCount - 1)},
-      { where: { user_id, group_id : group_id }}
-    )
+    await ug.update( { total_owed : tot_owed + split*(friendsCount - 1)} )
 
     return successResponse(req, res, {}, 201);
   } catch (error) {
