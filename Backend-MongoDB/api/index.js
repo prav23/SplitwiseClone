@@ -15,36 +15,36 @@ router.post('/register', user.register);
 router.get('/users/:id', passport.authenticate("jwt", { session: false }), user.findUser);
 router.get('/users', passport.authenticate("jwt", { session: false }), user.findAllUsers);
 
-router.post('/profile', profile.createProfile);
-router.put('/profile', profile.updateProfile);
-router.get('/profile/:user_id', profile.getProfile);
+router.post('/profile', passport.authenticate("jwt", { session: false }), profile.createProfile);
+router.put('/profile', passport.authenticate("jwt", { session: false }), profile.updateProfile);
+router.get('/profile/:user_id', passport.authenticate("jwt", { session: false }), profile.getProfile);
 
 //router.get('/usergroups/:group_id/:user_id', usergroups.findUserGroupByGroupIdUserID);
-router.get('/usergroups/group/:group_id', usergroups.findUserGroupsByGroupId);
-router.get('/usergroups/user/:user_id', usergroups.findUserGroupsByUserId);
-router.post('/usergroups', usergroups.createUserGroup);
-router.put('/usergroups/settle', usergroups.settleUserGroup);
-router.put('/usergroups/expense', usergroups.addExpenseUserGroup);
-router.put('/usergroups/groupinvite', usergroups.acceptUserGroupInvite);
-router.delete('/usergroups/:group_id/:user_id', usergroups.deleteUserGroupByGroupIdUserID);
+router.get('/usergroups/group/:group_id', passport.authenticate("jwt", { session: false }), usergroups.findUserGroupsByGroupId);
+router.get('/usergroups/user/:user_id', passport.authenticate("jwt", { session: false }), usergroups.findUserGroupsByUserId);
+router.post('/usergroups', passport.authenticate("jwt", { session: false }), usergroups.createUserGroup);
+router.put('/usergroups/settle', passport.authenticate("jwt", { session: false }), usergroups.settleUserGroup);
+router.put('/usergroups/expense', passport.authenticate("jwt", { session: false }), usergroups.addExpenseUserGroup);
+router.put('/usergroups/groupinvite', passport.authenticate("jwt", { session: false }), usergroups.acceptUserGroupInvite);
+router.delete('/usergroups/:group_id/:user_id', passport.authenticate("jwt", { session: false }), usergroups.deleteUserGroupByGroupIdUserID);
 
-router.get('/groups/:id',groups.findGroup);
-router.get('/groups', groups.findAllGroups);
-router.post('/groups', groups.createGroup);
-router.put('/groups', groups.updateGroup);
+router.get('/groups/:id', passport.authenticate("jwt", { session: false }), groups.findGroup);
+router.get('/groups', passport.authenticate("jwt", { session: false }), groups.findAllGroups);
+router.post('/groups', passport.authenticate("jwt", { session: false }), groups.createGroup);
+router.put('/groups', passport.authenticate("jwt", { session: false }), groups.updateGroup);
 
-router.get('/expenses/:group_id',expense.findExpensesByGroup);
+router.get('/expenses/:group_id', passport.authenticate("jwt", { session: false }), expense.findExpensesByGroup);
 //router.get('/expenses/:user_id',expense.findExpensesByUser);
-router.get('/expenses', expense.findAllExpenses);  
-router.post('/expenses', expense.createExpense);
-router.delete('/expenses/:id', expense.deleteExpense);
+router.get('/expenses', passport.authenticate("jwt", { session: false }), expense.findAllExpenses);  
+router.post('/expenses', passport.authenticate("jwt", { session: false }), expense.createExpense);
+router.delete('/expenses/:id', passport.authenticate("jwt", { session: false }), expense.deleteExpense);
 
-router.get('/userfriends/:user_id', userfriends.findUserFriendsByUser);
-router.put('/userfriends/settle', userfriends.settleFriends);
-router.put('/userfriends/expense', userfriends.addExpenseUserFriends);
+router.get('/userfriends/:user_id', passport.authenticate("jwt", { session: false }), userfriends.findUserFriendsByUser);
+router.put('/userfriends/settle', passport.authenticate("jwt", { session: false }), userfriends.settleFriends);
+router.put('/userfriends/expense', passport.authenticate("jwt", { session: false }), userfriends.addExpenseUserFriends);
 
-router.post('/userfriends', userfriends.createUserFriends);
-router.put('/userfriends', userfriends.updateUserFriends);
+router.post('/userfriends', passport.authenticate("jwt", { session: false }), userfriends.createUserFriends);
+router.put('/userfriends', passport.authenticate("jwt", { session: false }), userfriends.updateUserFriends);
 
 
 module.exports = router;
