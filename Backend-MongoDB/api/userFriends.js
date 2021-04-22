@@ -3,10 +3,8 @@ const UserFriends = require("../models/UserFriends");
 
 const findUserFriendsByUser = async (req, res) => {
   try {
-      const user_id = Number(req.params.user_id);
-      const userFriends = await UserFriends.findOne({
-          where: { user_id : user_id}
-      });
+      const user_id = req.params.user_id;
+      const userFriends = await UserFriends.findOne({ user : user_id});
       return successResponse(req, res, { userFriends });
     } catch (error) {
       return errorResponse(req, res, error.message);
@@ -19,25 +17,22 @@ const createUserFriends = async (req, res) => {
     const friends_owe_map = {};
     new_friend_user_ids.map(nfuid => friends_owe_map[nfuid] = 0);
     friends_owe_map[user_id] = 0;
-    const payload = {
-      user_id,
-      friends_owe_map
-    }
-    const newUserFriend = await UserFriends.create(payload);
+
+    const userFriendsFields = {};
+    userFriendsFields.user = user_id;
+    userFriendsFields.friends_owe_map = friends_owe_map;
+    
+    const newUserFriend = await UserFriends.create(userFriendsFields);
 
     // new friends maps are initialized
     new_friend_user_ids.map(async (nfuid) => {
-      const userfriend = await UserFriends.findOne({
-        where: {
-          user_id : nfuid,
-        },
-      });
+      const userfriend = await UserFriends.findOne({ user : nfuid });
       if (!userfriend) {
         const new_friends_owe_map = {};
         new_friends_owe_map[user_id] = 0;
         new_friend_user_ids.map(nfid => new_friends_owe_map[nfid] = 0);
         const payload = {
-          user_id : nfuid,
+          user : nfuid,
           friends_owe_map : new_friends_owe_map,
         }
         const newUserFriend = await UserFriends.create(payload);

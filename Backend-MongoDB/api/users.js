@@ -87,10 +87,8 @@ const findAllUsers = async (req, res) => {
 
 const findUser = async (req, res) => {
     try {
-        const id = Number(req.params.id);
-        const user = await User.findOne({
-            where: { user_id : id}
-        });
+        const id = req.params.id;
+        const user = await User.findOne({ _id : id});
         if (user !== null) {
           return successResponse(req, res, { user });
         } else {

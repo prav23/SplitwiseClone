@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/login', user.login);
 router.post('/register', user.register);
-router.get('/users/:id',user.findUser);
+router.get('/users/:id', passport.authenticate("jwt", { session: false }), user.findUser);
 router.get('/users', passport.authenticate("jwt", { session: false }), user.findAllUsers);
 
 router.post('/profile', profile.createProfile);
@@ -34,8 +34,8 @@ router.post('/groups', groups.createGroup);
 router.put('/groups', groups.updateGroup);
 
 router.get('/expenses/:group_id',expense.findExpensesByGroup);
-router.get('/expenses/:user_id',expense.findExpensesByUser);
-router.get('/expenses', expense.findAllExpenses);
+//router.get('/expenses/:user_id',expense.findExpensesByUser);
+router.get('/expenses', expense.findAllExpenses);  
 router.post('/expenses', expense.createExpense);
 router.delete('/expenses/:id', expense.deleteExpense);
 

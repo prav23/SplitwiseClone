@@ -3,9 +3,7 @@ const Expense = require("../models/Expense");
 
 const findAllExpenses = async (req, res) => {
     try {
-        const allExpenses = await Expense.findAll({
-          where: {},
-        });
+        const allExpenses = await Expense.find({});
         if (allExpenses) {
           return successResponse(req, res, { allExpenses });
         } else {
@@ -23,10 +21,8 @@ const findAllExpenses = async (req, res) => {
 
 const findExpensesByUser = async (req, res) => {
     try {
-        const userId = Number(req.params.user_id);
-        const expense = await Expense.findAll({
-            where: { user_id : userId}
-        });
+        const userId = req.params.user_id;
+        const expense = await Expense.findOne({user : userId});
         if (expense !== null) {
           return successResponse(req, res, { expense });
         } else {
@@ -44,10 +40,8 @@ const findExpensesByUser = async (req, res) => {
 
 const findExpensesByGroup = async (req, res) => {
     try {
-        const groupId = Number(req.params.group_id);
-        const expense = await Expense.findAll({
-            where: { group_id : groupId}
-        });
+        const groupId = req.params.group_id;
+        const expense = await Expense.find({ group : groupId });
         if (expense !== null) {
           return successResponse(req, res, { expense });
         } else {
@@ -67,14 +61,14 @@ const createExpense = async (req, res) => {
     try {
       console.log(req.body);
       const { amount, description, expense_date, user_id, group_id } = req.body;
-      const payload = {
-        amount,
-        description,
-        expense_date,
-        user_id,
-        group_id,
-      };
-      const newExpense = await Expense.create(payload);
+      const expenseFields = {};
+      expenseFields.user = user_id;
+      expenseFields.group = group_id;
+      expenseFields.amount = amount;
+      expenseFields.description = description;
+      expenseFields.expense_date = expense_date;
+
+      const newExpense = await Expense.create(expenseFields);
       return successResponse(req, res, {}, 201);
     } catch (error) {
       return errorResponse(req, res, error.message);
@@ -83,18 +77,10 @@ const createExpense = async (req, res) => {
 
   const deleteExpense = async (req, res) => {
     try {
-        const id = Number(req.params.id);
-        const expense = await Expense.findOne({
-            where: { 
-              expense_id : id
-            }
-        });
+        const id = req.params.id;
+        const expense = await Expense.findOne({_id : id});
         if (expense !== null) {
-          await Expense.destroy({
-            where: {
-              expense_id : id
-            },
-          });
+          await Expense.deleteOne({ _id : id});
           return successResponse(req, res, { });
         } else {
           return errorResponse(

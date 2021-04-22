@@ -4,9 +4,7 @@ const Group = require("../models/Group");
 
 const findAllGroups = async (req, res) => {
     try {
-        const allGroups = await Group.findAll({
-          where: {},
-        });
+        const allGroups = await Group.find({});
         if (allGroups) {
           return successResponse(req, res, { allGroups });
         } else {
@@ -24,10 +22,8 @@ const findAllGroups = async (req, res) => {
 
 const findGroup = async (req, res) => {
   try {
-      const id = Number(req.params.id);
-      const group = await Group.findOne({
-          where: { group_id : id}
-      });
+      const id = req.params.id;
+      const group = await Group.findOne({ _id : id });
       if (group !== null) {
         return successResponse(req, res, { group });
       } else {
@@ -47,11 +43,7 @@ const createGroup = async (req, res) => {
   try {
     const { group_name, group_image, new_friend_user_ids } = req.body;
     // update userGroup and userfriends table with new friends here.
-    const group = await Group.findOne({
-      where: {
-        group_name,
-      },
-    });
+    const group = await Group.findOne({group_name});
     if (group) {
       throw new Error("Group already exists with same name");
     }
@@ -70,11 +62,7 @@ const createGroup = async (req, res) => {
 const updateGroup = async (req, res) => {
   try {
     const { group_id, group_name, group_image } = req.body;
-    const group = await Group.findOne({
-      where: {
-        group_id,
-      },
-    });
+    const group = await Group.findOne({ _id : group_id});
     if(group !== null){
       await group.update({ group_name, group_image });
     }

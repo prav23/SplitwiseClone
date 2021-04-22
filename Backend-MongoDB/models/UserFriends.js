@@ -8,7 +8,7 @@ const UserFriendsSchema = new Schema({
     ref: 'users'
   },
   friends_owe_map: {
-    type: JSON,
+    type: Map,
   }
 });
 
