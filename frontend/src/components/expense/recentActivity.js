@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { getExpenses } from '../../actions/expenseActions';
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import ago from 's-ago';
 
 class Expenses extends Component {
 
@@ -13,7 +14,8 @@ class Expenses extends Component {
       pageSize: 2,
       pageNumber: 0,
       activatedExpense: null,
-      expenseComments: []
+      expenseComments: [],
+      newCommentText: ''
     }
   }
 
@@ -36,7 +38,7 @@ class Expenses extends Component {
 
 
   handlePageSizeChange(newPageSize) {
-    this.setState({pageSize: newPageSize})
+    this.setState({pageSize: newPageSize, pageNumber: 0})
   }
 
   handlePageNumberChange(expenseDetails, isForward){
@@ -53,6 +55,21 @@ class Expenses extends Component {
         }
       }
     }
+  }
+
+  submitNewComment(group_id, expense_id, user_id){
+    axios.post('http://localhost:3001/api/expensecomments', {
+      group_id,
+      user_id,
+      expense_id,
+      description: this.state.newCommentText
+    }).then(response => {
+      this.setState({newCommentText: ''})
+      const oldExpenseId = this.state.activatedExpense;
+      this.setState({activatedExpense: null}, () =>{
+        this.setState({activatedExpense: oldExpenseId});
+      })
+    })
   }
 
   render() {
@@ -114,24 +131,33 @@ class Expenses extends Component {
                           <small>
                             Expense Date :: { exp.expense_date.toString() }
                           </small>
-
                           {this.state.activatedExpense === exp.expense_id && (
                             this.state.expenseComments.map(expenseComment => 
-                              <div key={ expenseComment.comment_id } className="mb-2 border rounded">
-                                <div class="card">
-                                  <div class="card-body">
-                                    <h5 class="card-title"> {(allUsersList.find(x => x.user_id === expenseComment.user_id)).name} 
-                                    <small> {expenseComment.createdAt} </small> </h5>
-                                    <p class="card-text"> {expenseComment.description} </p>
+                              <div className="row">
+                                <div className="col-6"></div>
+                                <div className="col-6">
+                                <div key={ expenseComment.comment_id } className="mb-2 border rounded">
+                                  <div className="card">
+                                    <div className="card-body">
+                                      <h5 className="card-title">{(allUsersList.find(x => x.user_id === expenseComment.user_id)).name}</h5>
+                                      <h5 className="card-title">{expenseComment.description}</h5>
+                                      <p className="card-text">{ago(new Date(expenseComment.createdAt))} </p>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+                                </div>
+                            </div>
                             )
                           )}
                           {this.state.activatedExpense === exp.expense_id && (
-                            <div>
-                              <input type="text" class="form-control" placeholder="Enter comment"></input>
-                              <button type="submit" class="btn btn-primary">Post Comment</button>
+                            <div className="row">
+                            <div className="col-6"></div>
+                            <div className="col-6">
+                              <div>
+                                <input type="text" class="form-control my-2" onChange={(event) => this.setState({newCommentText: event.target.value})} placeholder="Enter comment" value={this.state.newCommentText}></input>
+                                <button type="button" onClick={() => this.submitNewComment(exp.group_id, exp.expense_id, user.user_id)} class="btn btn-primary">Post Comment</button>
+                              </div>
+                            </div>
                             </div>
                           )}
                         </div>
