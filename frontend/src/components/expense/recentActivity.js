@@ -117,14 +117,22 @@ class Expenses extends Component {
 
                           {this.state.activatedExpense === exp.expense_id && (
                             this.state.expenseComments.map(expenseComment => 
-                            <p> 
                               <div key={ expenseComment.comment_id } className="mb-2 border rounded">
-                                <div class="d-flex w-100 justify-content-between">
-                                  <p> "{(allUsersList.find(x => x.user_id === expenseComment.user_id)).name}" </p>
-                                  <p> {expenseComment.description} </p>
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h5 class="card-title"> {(allUsersList.find(x => x.user_id === expenseComment.user_id)).name} 
+                                    <small> {expenseComment.createdAt} </small> </h5>
+                                    <p class="card-text"> {expenseComment.description} </p>
+                                  </div>
                                 </div>
                               </div>
-                            </p>)
+                            )
+                          )}
+                          {this.state.activatedExpense === exp.expense_id && (
+                            <div>
+                              <input type="text" class="form-control" placeholder="Enter comment"></input>
+                              <button type="submit" class="btn btn-primary">Post Comment</button>
+                            </div>
                           )}
                         </div>
                       );
