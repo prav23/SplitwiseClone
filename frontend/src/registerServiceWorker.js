@@ -8,7 +8,7 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
-const isec2-52-15-69-100.us-east-2.compute.amazonaws.com = Boolean(
+const isLocalhost = Boolean(
   window.location.hostname === 'ec2-52-15-69-100.us-east-2.compute.amazonaws.com' ||
     // [::1] is the IPv6 ec2-52-15-69-100.us-east-2.compute.amazonaws.com address.
     window.location.hostname === '[::1]' ||
@@ -32,7 +32,7 @@ export default function register() {
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
-      if (isec2-52-15-69-100.us-east-2.compute.amazonaws.com) {
+      if (isLocalhost) {
         // This is running on ec2-52-15-69-100.us-east-2.compute.amazonaws.com. Lets check if a service worker still exists or not.
         checkValidServiceWorker(swUrl);
 
