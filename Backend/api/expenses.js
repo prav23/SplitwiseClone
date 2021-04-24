@@ -65,7 +65,7 @@ const findExpensesByGroup = async (req, res) => {
 };
 
 
-const consumer = kafkaConnection.getConsumer('quickstart-events2');
+const consumer = kafkaConnection.getConsumer('expenses');
 
 consumer.on('message', async function (message) {
   const payload = JSON.parse(message.value);
@@ -86,7 +86,7 @@ const createExpense = async (req, res) => {
       //const newExpense = await Expense.create(payload);
       const kafka_producer = kafkaConnection.getProducer();
       kafka_producer.send([{
-        topic: 'quickstart-events2',
+        topic: 'expenses',
         messages: JSON.stringify(payload)
       }], (dataBack) => {
         console.log("Data sending back: " ,dataBack);
