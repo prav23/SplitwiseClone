@@ -121,7 +121,7 @@ class Expenses extends Component {
                     {paginatedExpenseList.map(exp => 
                     {
                     return (
-                        <div key={ exp.expense_id } className="mb-2 border rounded" onClick={() => this.setState({activatedExpense: exp.expense_id})}>
+                        <div key={ exp.expense_id } className="mb-2 border rounded" >
                           <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
                             "{(allUsersList.find(x => x.user_id === exp.user_id)).name}" added "{exp.description}" in Group:: "{(allGroupsList.find(x => x.group_id === exp.group_id)).group_name}"

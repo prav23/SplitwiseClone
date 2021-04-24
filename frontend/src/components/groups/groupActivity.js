@@ -5,10 +5,12 @@ import { getExpenses, createExpense } from '../../actions/expenseActions';
 import { getGroupUsersDetails } from '../../actions/groupActivityActions';
 import SelectListGroup from '../common/SelectListGroup';
 import { Link } from "react-router-dom";
-
 import TextFieldGroup from '../common/TextFieldGroup';
+import axios from 'axios';
+import ago from 's-ago';
 
 class GroupExpenses extends Component {
+
   componentDidMount() {
     const { isAuthenticated } = this.props.auth;
     if(isAuthenticated){
@@ -26,7 +28,12 @@ class GroupExpenses extends Component {
       expense_date: '',
       user_id: '',
       group_id: '',
-      errors: {}
+      errors: {},
+      pageSize: 2,
+      pageNumber: 0,
+      activatedExpense: null,
+      expenseComments: [],
+      newCommentText: ''
     };
 
     this.onChange = this.onChange.bind(this);
@@ -64,7 +71,52 @@ class GroupExpenses extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  componentWillUpdate(nextProps, nextState){
+    if(this.state.activatedExpense !== nextState.activatedExpense && nextState.activatedExpense !== null){
+      axios.get(`http://localhost:3001/api/expensecomments/${nextState.activatedExpense}`).then(response => {
+        this.setState({expenseComments: response.data.data.expenseComments});
+      })
+    }
+  }
+
+
+  handlePageSizeChange(newPageSize) {
+    this.setState({pageSize: newPageSize, pageNumber: 0})
+  }
+
+  handlePageNumberChange(expenseDetails, isForward){
+    if(expenseDetails){
+      const expenseList = expenseDetails.data.allExpenses;
+      const numberOfPages = (expenseList.length)/(this.state.pageSize);
+      if(isForward){
+        if(this.state.pageNumber < numberOfPages - 1){
+          this.setState({pageNumber: this.state.pageNumber + 1})
+        }
+      } else {
+        if(this.state.pageNumber > 0){
+          this.setState({pageNumber: this.state.pageNumber - 1})
+        }
+      }
+    }
+  }
+
+  submitNewComment(group_id, expense_id, user_id){
+    axios.post('http://localhost:3001/api/expensecomments', {
+      group_id,
+      user_id,
+      expense_id,
+      description: this.state.newCommentText
+    }).then(response => {
+      this.setState({newCommentText: ''})
+      const oldExpenseId = this.state.activatedExpense;
+      this.setState({activatedExpense: null}, () =>{
+        this.setState({activatedExpense: oldExpenseId});
+      })
+    })
+  }
+
   render() {
+    const { user } = this.props.auth;
     const { expenseDetails, expenseLoading } = this.props.expense;
     const { allUsers, allGroups, profile } = this.props.dashboard;
     const { errors } = this.state;
@@ -87,6 +139,7 @@ class GroupExpenses extends Component {
     }
     let groupExpenseList = [];
     let sortedgroupExpenseList =[];
+    let paginatedExpenseList = [];
     if(expenseDetails){
         let allExpensesList = expenseDetails.data.allExpenses;
         groupExpenseList = allExpensesList.filter(x => x.group_id === Number(this.props.match.params.groupId));
@@ -96,7 +149,13 @@ class GroupExpenses extends Component {
     }
     //console.log(groupExpenseList);
     let groupActivityContent;
-  
+    
+    if(sortedgroupExpenseList){
+      const start = this.state.pageSize * this.state.pageNumber;
+      const end = start + this.state.pageSize;
+      paginatedExpenseList = sortedgroupExpenseList.slice(start, end);
+    }
+
     if (expenseLoading) {
         groupActivityContent = (<div>
         <p className="lead text-muted">
@@ -104,13 +163,13 @@ class GroupExpenses extends Component {
         </p>        
     </div>);
     } else {
-        if(sortedgroupExpenseList){
+        if(paginatedExpenseList){
             groupActivityContent = (
               <div class="list-group mt-2">
-                {sortedgroupExpenseList.map(exp => 
+                {paginatedExpenseList.map(exp => 
                 {
                 return (
-                    <div key={ exp.expense_id } className="mb-2 border rounded">
+                    <div key={ exp.expense_id } className="mb-2 border rounded" onClick={() => this.setState({activatedExpense: exp.expense_id})}>
                       <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">
                         "{(allUsersList.find(x => x.user_id === exp.user_id)).name}" added "{exp.description}"
@@ -120,6 +179,41 @@ class GroupExpenses extends Component {
                       <small>
                         Expense Date :: { exp.expense_date.toString() }
                       </small>
+                      {this.state.activatedExpense === exp.expense_id && (
+                            this.state.expenseComments.map(expenseComment => 
+                              <div className="row">
+                                <div className="col-6"></div>
+                                <div className="col-6">
+                                <div key={ expenseComment.comment_id } className="mb-2 border rounded">
+                                  <div className="card">
+                                    <div className="card-body">
+                                      <h5 className="card-title">{(allUsersList.find(x => x.user_id === expenseComment.user_id)).name} </h5>
+                                      <h5 className="card-title">{expenseComment.description}</h5>
+                                      <p className="card-text">{ago(new Date(expenseComment.createdAt))} </p>
+                                      <i class="bi bi-trash"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                      </svg>
+                                      <i class="bi bi-trash"> Delete Comment</i>
+                                    </div>
+                                  </div>
+                                </div>
+                                </div>
+                            </div>
+                            )
+                          )}
+                          {this.state.activatedExpense === exp.expense_id && (
+                            <div className="row">
+                            <div className="col-6"></div>
+                            <div className="col-6">
+                              <div>
+                                <input type="text" class="form-control my-2" onChange={(event) => this.setState({newCommentText: event.target.value})} placeholder="Enter comment" value={this.state.newCommentText}></input>
+                                <button type="button" onClick={() => this.submitNewComment(exp.group_id, exp.expense_id, user.user_id)} class="btn btn-primary">Post Comment</button>
+                              </div>
+                            </div>
+                            </div>
+                          )}
                     </div>
                   );
                 }
@@ -221,7 +315,30 @@ class GroupExpenses extends Component {
           </div>
         </div>
       </div>
-          { groupActivityContent }
+
+          {/* { groupActivityContent } */}
+      </div>
+      <div class="align-items-center">
+        <h4 class="h4">Group Recent Expenses</h4>
+        <div className="row align-items-center">
+        <div className="col"></div>
+        <div className="col-1">
+        <button onClick={() => this.handlePageNumberChange(expenseDetails, false)}> &laquo;</button>
+          </div>
+                <form className="col-2">
+          <div class="form-row">
+            <select class="form-control" value={this.state.pageSize} onChange={(event) => this.handlePageSizeChange(event.target.value)}>
+              <option>2</option>
+              <option>5</option>
+              <option>10</option>
+            </select>
+          </div>
+          </form>
+          <div className="col-1">
+            <button onClick={() => this.handlePageNumberChange(expenseDetails, true)}> &raquo;</button>
+          </div>
+        </div>
+        { groupActivityContent }
       </div>
     </main>
     );

@@ -73,8 +73,12 @@ class Dashboard extends Component {
         <div class="col-sm border">
           You Owe
           {friends_owe_map.map( ([key, value]) => {
+            let userName = "";
+            if(allUsersList.find(x => x.user_id === Number(key))){
+              userName = (allUsersList.find(x => x.user_id === Number(key))).name;
+            }
             if(value < 0)
-              return <div class="col-sm border"> you owe User_ID {key} : "{-value}" { currency } </div>
+              return <div class="col-sm border"> you owe { userName } : "{-value}" { currency } </div>
             else
               return <div></div>
           })}
@@ -84,8 +88,12 @@ class Dashboard extends Component {
         <div class="col-sm border py-2">
           You are Owed
           {friends_owe_map.map( ([key, value]) => {
+            let userName = "";
+            if(allUsersList.find(x => x.user_id === Number(key))){
+              userName = (allUsersList.find(x => x.user_id === Number(key))).name;
+            }
             if(value > 0)
-              return <div class="col-sm border" > User_ID {key} owes you : "{value}" { currency } </div>
+              return <div class="col-sm border" > { userName } owes you : "{value}" { currency } </div>
             else
               return <div></div>
           })}
