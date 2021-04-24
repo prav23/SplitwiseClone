@@ -6,7 +6,7 @@ function ConnectionProvider() {
   this.getConsumer = function (topic_name) {
    
     this.client = new kafka.KafkaClient(
-      {kafkaHost:'127.0.0.1:9092'}
+      {kafkaHost:'ec2-52-15-69-100.us-east-2.compute.amazonaws.com:9092'}
       //{kafkaHost: process.env.KAFKA_URL}
       );
     this.kafkaConsumerConnection = new kafka.Consumer(this.client, [{ topic: topic_name, partition: 0 }]);
@@ -21,7 +21,7 @@ function ConnectionProvider() {
     if (!this.kafkaProducerConnection) {
      
       this.client = new kafka.KafkaClient(
-        {kafkaHost:'127.0.0.1:9092'}
+        {kafkaHost:'ec2-52-15-69-100.us-east-2.compute.amazonaws.com:9092'}
         // {kafkaHost:process.env.KAFKA_URL}
         )
         ;

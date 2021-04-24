@@ -5,7 +5,7 @@
 //   "root",
 //   "",
 //   {
-//     host: "localhost",
+//     host: "ec2-52-15-69-100.us-east-2.compute.amazonaws.com",
 //     port: 3306,
 //     dialect: "mysql",
 //   }

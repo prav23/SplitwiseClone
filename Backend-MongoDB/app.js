@@ -16,13 +16,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOveride("_method"));
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: "http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3000", credentials: true }));
 app.use("/api", apiRoutes);
 app.use(passport.initialize());
 //Passport config
 require("./config/passport")(passport);
 app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3000");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -52,7 +52,7 @@ const setUpExpress = () => {
   const port = process.env.APP_PORT || 3001;
 
   app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Example app listening at http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:${port}`);
   });
 };
 
