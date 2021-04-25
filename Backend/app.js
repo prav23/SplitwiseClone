@@ -13,11 +13,11 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.use(cors({ origin: "http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3000", credentials: true }));
+app.use(cors({ origin: "http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3000", credentials: true }));
 app.use("/api", apiRoutes);
 
 //use cors to allow cross origin resource sharing
-// app.use(cors({ origin: 'http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3000', credentials: true }));
+// app.use(cors({ origin: 'http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3000', credentials: true }));
 
 //use express session to maintain session data
 app.use(
@@ -38,7 +38,7 @@ const setUpExpress = () => {
   const port = process.env.APP_PORT || 3001;
 
   app.listen(port, () => {
-    console.log(`Example app listening at http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:${port}`);
+    console.log(`Example app listening at http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:${port}`);
   });
 };
 

@@ -3,7 +3,7 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 it("Case : Get Users"), (done) => {
-    chai.request("http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001")
+    chai.request("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001")
     .get('/api/users')
     .then((res) => {
         expect(res.status).to.equal(200);
@@ -12,7 +12,7 @@ it("Case : Get Users"), (done) => {
 }
 
 it("Case : Post Login"), (done) => {
-    chai.request("http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001")
+    chai.request("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001")
     .post('/api/login')
     .set('Accept', 'application/json')
     .send({

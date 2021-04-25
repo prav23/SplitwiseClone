@@ -17,7 +17,7 @@ import {
 export const getDashboardDetails =  user_id => dispatch => {
   dispatch(setDashboardLoading());
   axios
-    .get(`http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/userfriends/${user_id}`)
+    .get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/userfriends/${user_id}`)
     .then(res =>
       dispatch({
         type: GET_DASHBOARD_DETAILS,
@@ -36,7 +36,7 @@ export const getDashboardDetails =  user_id => dispatch => {
 export const getUserGroupDetails =  user_id => dispatch => {
     dispatch(setDashboardLoading());
     axios
-      .get(`http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/usergroups/user/${user_id}`)
+      .get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/usergroups/user/${user_id}`)
       .then(res =>
         dispatch({
           type: GET_USERGROUP_DETAILS,
@@ -69,7 +69,7 @@ export const clearDashboarDetails = () => {
 export const getCurrentProfile = user_id => dispatch => {
   dispatch(setProfileLoading());
   axios
-    .get(`http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/profile/${user_id}`)
+    .get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/profile/${user_id}`)
     .then(res =>
       dispatch({
         type: GET_PROFILE,
@@ -101,7 +101,7 @@ export const clearCurrentProfile = () => {
 // Create Profile
 export const createProfile = (profileData, history) => dispatch => {
   axios
-    .post("http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/profile", profileData)
+    .post("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/profile", profileData)
     .then(res => history.push("/dashboard"))
     .catch(err =>
       dispatch({
@@ -114,7 +114,7 @@ export const createProfile = (profileData, history) => dispatch => {
 // Update Profile
 export const updateProfile = (profileData, history) => dispatch => {
   axios
-    .put("http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/profile", profileData)
+    .put("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/profile", profileData)
     .then(res => history.push("/dashboard"))
     .catch(err =>
       dispatch({
@@ -128,7 +128,7 @@ export const updateProfile = (profileData, history) => dispatch => {
 export const getAllGroups =  () => dispatch => {
   dispatch(setDashboardLoading());
   axios
-    .get(`http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/groups`)
+    .get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/groups`)
     .then(res =>
       dispatch({
         type: GET_ALL_GROUPS,
@@ -147,7 +147,7 @@ export const getAllGroups =  () => dispatch => {
 export const getAllUsers =  () => dispatch => {
   dispatch(setDashboardLoading());
   axios
-    .get(`http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/users`)
+    .get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/users`)
     .then(res =>
       dispatch({
         type: GET_ALL_USERS,
@@ -165,10 +165,10 @@ export const getAllUsers =  () => dispatch => {
 // settleUp (update userFriends table and userGroups table too)
 export const settleUp = (settleData, history) => dispatch => {
   axios
-    .put("http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/userfriends/settle", settleData)
+    .put("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/userfriends/settle", settleData)
       .then(res => {
         console.log(settleData);
-        axios.put("http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/usergroups/settle", settleData)
+        axios.put("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/usergroups/settle", settleData)
         .then( res => history.push("/dashboard"))
         .catch(err => history.push("/dashboard")); 
     })

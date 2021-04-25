@@ -30,7 +30,7 @@ class Expenses extends Component {
 
   componentWillUpdate(nextProps, nextState){
     if(this.state.activatedExpense !== nextState.activatedExpense){
-      axios.get(`http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/expensecomments/${nextState.activatedExpense}`).then(response => {
+      axios.get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/expensecomments/${nextState.activatedExpense}`).then(response => {
         this.setState({expenseComments: response.data.data.expenseComments});
       })
     }
@@ -58,7 +58,7 @@ class Expenses extends Component {
   }
 
   submitNewComment(group_id, expense_id, user_id){
-    axios.post('http://ec2-52-15-69-100.us-east-2.compute.amazonaws.com:3001/api/expensecomments', {
+    axios.post('http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/expensecomments', {
       group_id,
       user_id,
       expense_id,
