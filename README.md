@@ -12,13 +12,9 @@ o	Go to frontend folder
 o	npm install
 o	npm start
 
-•	Node Backend
+•	Node and kafka Backend
 o	Go to backend folder
 o	npm install
 o	node app.js
 
-•	Kafka Backend
-o	Go to kafka backend folder
-o	npm install
-o	node server.js
 
