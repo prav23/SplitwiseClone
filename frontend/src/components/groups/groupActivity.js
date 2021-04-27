@@ -15,7 +15,7 @@ class GroupExpenses extends Component {
     const { isAuthenticated } = this.props.auth;
     if(isAuthenticated){
       this.props.getExpenses();
-      const group_id = Number(this.props.match.params.groupId);
+      const group_id = this.props.match.params.groupId;
       this.props.getGroupUsersDetails(group_id);
     }
   }
@@ -55,8 +55,8 @@ class GroupExpenses extends Component {
       amount: this.state.amount,
       description: this.state.description,
       expense_date: this.state.expense_date,
-      user_id: Number(this.state.user_id),
-      group_id: Number(this.props.match.params.groupId),
+      user_id: this.state.user_id,
+      group_id: this.props.match.params.groupId,
       groupUsersData: this.props.groupActivity.groupUsersDetails.data.userGroups,
       errors: {}
     };
@@ -73,7 +73,7 @@ class GroupExpenses extends Component {
 
   componentWillUpdate(nextProps, nextState){
     if(this.state.activatedExpense !== nextState.activatedExpense && nextState.activatedExpense !== null){
-      axios.get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/expensecomments/${nextState.activatedExpense}`).then(response => {
+      axios.get(`http://localhost:3001/api/expensecomments/${nextState.activatedExpense}`).then(response => {
         this.setState({expenseComments: response.data.data.expenseComments});
       })
     }
@@ -101,7 +101,9 @@ class GroupExpenses extends Component {
   }
 
   submitNewComment(group_id, expense_id, user_id){
-    axios.post('http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/expensecomments', {
+    console.log(expense_id);
+    console.log(user_id);
+    axios.post('http://localhost:3001/api/expensecomments', {
       group_id,
       user_id,
       expense_id,
@@ -130,7 +132,7 @@ class GroupExpenses extends Component {
     if(allUsers.data){
       allUsersList = allUsers.data.allUsers;
       allUserOptions.push({ label: '* Select Friend', value: '' });
-      allUsersList.map(su => allUserOptions.push({label: su.name, value: su.user_id}));
+      allUsersList.map(su => allUserOptions.push({label: su.name, value: su._id}));
     }
 
     let allGroupsList = [];
@@ -142,7 +144,7 @@ class GroupExpenses extends Component {
     let paginatedExpenseList = [];
     if(expenseDetails){
         let allExpensesList = expenseDetails.data.allExpenses;
-        groupExpenseList = allExpensesList.filter(x => x.group_id === Number(this.props.match.params.groupId));
+        groupExpenseList = allExpensesList.filter(x => x.group === this.props.match.params.groupId);
         sortedgroupExpenseList = groupExpenseList.sort(function(a,b){
           return new Date(b.expense_date) - new Date(a.expense_date);
         });
@@ -169,27 +171,27 @@ class GroupExpenses extends Component {
                 {paginatedExpenseList.map(exp => 
                 {
                 return (
-                    <div key={ exp.expense_id } className="mb-2 border rounded" onClick={() => this.setState({activatedExpense: exp.expense_id})}>
+                    <div key={ exp._id } className="mb-2 border rounded" onClick={() => this.setState({activatedExpense: exp._id})}>
                       <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">
-                        "{(allUsersList.find(x => x.user_id === exp.user_id)).name}" added "{exp.description}"
+                        "{(allUsersList.find(x => x._id === exp.user)).name}" added "{exp.description}"
                         </h5>
                       </div>
                       <p class="mb-1">Expense Amount:: "{exp.amount}" { currency }</p>
                       <small>
                         Expense Date :: { exp.expense_date.toString() }
                       </small>
-                      {this.state.activatedExpense === exp.expense_id && (
+                      {this.state.activatedExpense === exp._id && (
                             this.state.expenseComments.map(expenseComment => 
                               <div className="row">
                                 <div className="col-6"></div>
                                 <div className="col-6">
-                                <div key={ expenseComment.comment_id } className="mb-2 border rounded">
+                                <div key={ expenseComment._id } className="mb-2 border rounded">
                                   <div className="card">
                                     <div className="card-body">
-                                      <h5 className="card-title">{(allUsersList.find(x => x.user_id === expenseComment.user_id)).name} </h5>
+                                      <h5 className="card-title">{(allUsersList.find(x => x._id === expenseComment.user)).name} </h5>
                                       <h5 className="card-title">{expenseComment.description}</h5>
-                                      <p className="card-text">{ago(new Date(expenseComment.createdAt))} </p>
+                                      <p className="card-text">{ago(new Date(expenseComment.expense_comment_date))} </p>
                                       <i class="bi bi-trash"></i>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -203,13 +205,13 @@ class GroupExpenses extends Component {
                             </div>
                             )
                           )}
-                          {this.state.activatedExpense === exp.expense_id && (
+                          {this.state.activatedExpense === exp._id && (
                             <div className="row">
                             <div className="col-6"></div>
                             <div className="col-6">
                               <div>
                                 <input type="text" class="form-control my-2" onChange={(event) => this.setState({newCommentText: event.target.value})} placeholder="Enter comment" value={this.state.newCommentText}></input>
-                                <button type="button" onClick={() => this.submitNewComment(exp.group_id, exp.expense_id, user.user_id)} class="btn btn-primary">Post Comment</button>
+                                <button type="button" onClick={() => this.submitNewComment(exp.group, exp._id, user.user_id)} class="btn btn-primary">Post Comment</button>
                               </div>
                             </div>
                             </div>
@@ -235,12 +237,12 @@ class GroupExpenses extends Component {
     <main class="col-md-2 col-lg-10">
       <div className="container">
         <div className= "row mt-2 border-bottom">
-          <img style = {{width:"100px",height:"100px"}} src={(allGroupsList.find(x => x.group_id === Number(this.props.match.params.groupId))).group_image} class="img-thumbnail" alt="..."/>  
+          <img style = {{width:"100px",height:"100px"}} src={(allGroupsList.find(x => x._id === this.props.match.params.groupId)).group_image} class="img-thumbnail" alt="..."/>  
           <div class = "col">
-            <h5>Group: { (allGroupsList.find(x => x.group_id === Number(this.props.match.params.groupId))).group_name} </h5>
+            <h5>Group: { (allGroupsList.find(x => x._id === this.props.match.params.groupId)).group_name} </h5>
           </div>
         <div class = "col-6">
-          <button className="btn btn-primary btn-block mt-2 mb-2" onClick = {e => history.push(`/editgroup/${Number(this.props.match.params.groupId)}`)}> Edit Group Info</button>
+          <button className="btn btn-primary btn-block mt-2 mb-2" onClick = {e => history.push(`/editgroup/${this.props.match.params.groupId}`)}> Edit Group Info</button>
         </div>
         <div class = "col">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">

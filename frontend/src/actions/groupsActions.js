@@ -11,7 +11,7 @@ import {
 export const getGroupsDetails =  user_id => dispatch => {
     dispatch(setGroupsLoading());
     axios
-      .get(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/usergroups/user/${user_id}`)
+      .get(`http://localhost:3001/api/usergroups/user/${user_id}`)
       .then(res =>
         dispatch({
           type: GET_GROUPS_DETAILS,
@@ -43,7 +43,7 @@ export const clearGroups = () => {
 // Update Group
 export const updateGroup = (groupData, history) => dispatch => {
   axios
-    .put("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/groups", groupData)
+    .put("http://localhost:3001/api/groups", groupData)
     .then(res => history.push("/dashboard"))
     .catch(err =>
       dispatch({
@@ -56,15 +56,15 @@ export const updateGroup = (groupData, history) => dispatch => {
 // Create Group
 export const createGroup = (groupData, history) => dispatch => {
     axios
-      .post("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/groups", groupData)
+      .post("http://localhost:3001/api/groups", groupData)
       .then(res => {
         const userGroupData = {
             user_id: groupData.user_id,
-            group_id: res.data.data.newGroup.group_id,
+            group_id: res.data.data.newGroup._id,
             new_friend_user_ids: groupData.new_friend_user_ids
           };
-          axios.post("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/usergroups", userGroupData);
-          axios.post("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/userfriends", userGroupData)
+          axios.post("http://localhost:3001/api/usergroups", userGroupData);
+          axios.post("http://localhost:3001/api/userfriends", userGroupData)
           .then( res => history.push("/dashboard"))
           .catch(err => history.push("/dashboard"));
         

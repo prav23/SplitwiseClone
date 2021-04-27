@@ -31,7 +31,7 @@ class MyGroups extends Component {
     let myGroupsContent;
     const handleLeaveGroup = ( group_id ) => {
       console.log(group_id, user.user_id);
-      axios.delete(`http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/usergroups/${group_id}/${user.user_id}`);
+      axios.delete(`http://localhost:3001/api/usergroups/${group_id}/${user.user_id}`);
       const ln = this.props.getGroupsDetails;
       setTimeout(() => ln(user.user_id), 2000);
     }
@@ -42,7 +42,7 @@ class MyGroups extends Component {
         group_id,
         user_id: user.user_id,
       }
-      axios.put("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001/api/usergroups/groupinvite", inviteUserGroupData);
+      axios.put("http://localhost:3001/api/usergroups/groupinvite", inviteUserGroupData);
       const ln = this.props.getGroupsDetails;
       setTimeout(() => ln(user.user_id), 2000);
     }
@@ -59,27 +59,27 @@ class MyGroups extends Component {
                     {groupsList.map(ug => 
                     {
                     return (
-                        <div key={ ug.id } className="mb-2 border rounded">
+                        <div key={ ug._id } className="mb-2 border rounded">
                           <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
-                              Group Name :: { (allGroupsList.find(x => x.group_id === ug.group_id)).group_name}
+                              Group Name :: { (allGroupsList.find(x => x._id === ug.group)).group_name}
                             </h5>
                           </div>
                           <p class="mb-1">Total owed in Group by {user.name} is: "{ ug.total_owed }" { currency }</p>
                           <p class="mb-1">Group Status :: { ug.status }</p>
                           <div>
                           { ug.status === "Registered" && 
-                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group_id}`)}> Vist Group Page</button>
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => history.push(`/groupActivity/${ug.group}`)}> Vist Group Page</button>
                           }
                           </div>
                           <div>
                           { ug.status === "Invited" && 
-                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => handleAcceptInvite(ug.group_id)}> Accept Group Invite</button>
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => handleAcceptInvite(ug.group)}> Accept Group Invite</button>
                           }
                           </div>
                           <div>
                           { ug.total_owed === 0 && ug.status === "Registered" && 
-                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => handleLeaveGroup(ug.group_id)}> Leave Group</button>
+                          <button className="btn btn-info btn-block mt-2 mb-2" onClick = {e => handleLeaveGroup(ug.group)}> Leave Group</button>
                           }
                           </div>
                         </div>

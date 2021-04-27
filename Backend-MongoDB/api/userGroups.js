@@ -28,7 +28,7 @@ const deleteUserGroupByGroupIdUserID = async (req, res) => {
 const findUserGroupsByGroupId = async (req, res) => {
   try {
       const group_id = req.params.group_id;
-      const userGroups = await UserGroup.findAll({ group : group_id });
+      const userGroups = await UserGroup.find({ group : group_id });
       if (userGroups !== null) {
         return successResponse(req, res, { userGroups });
       } else {

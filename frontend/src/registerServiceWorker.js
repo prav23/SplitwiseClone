@@ -9,7 +9,7 @@
 // This link also includes instructions on opting out of this behavior.
 
 const isLocalhost = Boolean(
-  window.location.hostname === 'ec2-18-222-123-13.us-east-2.compute.amazonaws.com' ||
+  window.location.hostname === '127.0.0.1' ||
     // [::1] is the IPv6 ec2-18-222-123-13.us-east-2.compute.amazonaws.com address.
     window.location.hostname === '[::1]' ||
     // ec2-18-222-123-13.us-east-2.compute.amazonaws.com/8 is considered ec2-18-222-123-13.us-east-2.compute.amazonaws.com for IPv4.

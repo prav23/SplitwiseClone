@@ -12,7 +12,7 @@ class EditProfile extends Component {
     const { profile } = this.props.dashboard;
     this.state = {
       image: profile.data.image ,
-      phoneNumber: profile.data.phoneNumber,
+      phonenumber: profile.data.phonenumber,
       currency: profile.data.currency,
       language: profile.data.language,
       timezone: profile.data.timezone,
@@ -38,7 +38,7 @@ class EditProfile extends Component {
     const profileData = {
       user_id: this.props.auth.user.user_id,
       image: this.state.base64URL,
-      phoneNumber: this.state.phoneNumber,
+      phonenumber: this.state.phonenumber,
       currency: this.state.currency,
       language: this.state.language,
       timezone: this.state.timezone
@@ -137,10 +137,10 @@ class EditProfile extends Component {
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="Phone Number"
-                  name="phoneNumber"
-                  value={this.state.phoneNumber}
+                  name="phonenumber"
+                  value={this.state.phonenumber}
                   onChange={this.onChange}
-                  error={errors.phoneNumber}
+                  error={errors.phonenumber}
                   info="Enter your phone number"
                 />
                 <SelectListGroup

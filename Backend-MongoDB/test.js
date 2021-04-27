@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 var expect = chai.expect;
 
 it("Should register user successfully", function(done){
-    chai.request('http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001')
+    chai.request('http://localhost:3001')
     .post('/register')
     .send({ "name":"Raja","email": "raja@gmail.com", "password" : "abcdef" })
     .end(function (err, res) {
@@ -18,7 +18,7 @@ it("Should register user successfully", function(done){
 })
 
 it("Should log in the user successfully", function(done){
-    chai.request('http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001')
+    chai.request('http://localhost:3001')
     .post('/login')
     .send({ "email": "raja@gmail.com", "password" : "abcdef"})
     .end(function (err, res) {
@@ -28,7 +28,7 @@ it("Should log in the user successfully", function(done){
 })
 
 it("Should Fetch Users"), function(done){
-    chai.request("http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001")
+    chai.request("http://localhost:3001")
     .get('/api/users')
     .then((res) => {
         expect(res.status).to.equal(200);

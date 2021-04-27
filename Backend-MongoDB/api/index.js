@@ -21,7 +21,7 @@ router.put('/profile', passport.authenticate("jwt", { session: false }), profile
 router.get('/profile/:user_id', passport.authenticate("jwt", { session: false }), profile.getProfile);
 
 //router.get('/usergroups/:group_id/:user_id', usergroups.findUserGroupByGroupIdUserID);
-router.get('/usergroups/group/:group_id', passport.authenticate("jwt", { session: false }), usergroups.findUserGroupsByGroupId);
+router.get('/usergroups/group/:group_id', usergroups.findUserGroupsByGroupId);
 router.get('/usergroups/user/:user_id', passport.authenticate("jwt", { session: false }), usergroups.findUserGroupsByUserId);
 router.post('/usergroups', passport.authenticate("jwt", { session: false }), usergroups.createUserGroup);
 router.put('/usergroups/settle', passport.authenticate("jwt", { session: false }), usergroups.settleUserGroup);

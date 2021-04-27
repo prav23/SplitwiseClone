@@ -1,5 +1,6 @@
 const { successResponse, errorResponse } = require("./helper");
 const Expense = require("../models/Expense");
+const kafkaConnection = require('../config/kafka');
 
 const findAllExpenses = async (req, res) => {
     try {
@@ -57,9 +58,15 @@ const findExpensesByGroup = async (req, res) => {
       }
 };
 
+const consumer = kafkaConnection.getConsumer('quickstart-events2');
+
+consumer.on('message', async function (message) {
+  const expenseFields = JSON.parse(message.value);
+  const newExpense = await Expense.create(expenseFields);
+});
+
 const createExpense = async (req, res) => {
     try {
-      console.log(req.body);
       const { amount, description, expense_date, user_id, group_id } = req.body;
       const expenseFields = {};
       expenseFields.user = user_id;
@@ -68,7 +75,15 @@ const createExpense = async (req, res) => {
       expenseFields.description = description;
       expenseFields.expense_date = expense_date;
 
-      const newExpense = await Expense.create(expenseFields);
+      //const newExpense = await Expense.create(expenseFields);
+      const kafka_producer = kafkaConnection.getProducer();
+      kafka_producer.send([{
+        topic: 'quickstart-events2',
+        messages: JSON.stringify(expenseFields)
+      }], (dataBack) => {
+        console.log("Data sending back: " ,dataBack);
+      });
+
       return successResponse(req, res, {}, 201);
     } catch (error) {
       return errorResponse(req, res, error.message);

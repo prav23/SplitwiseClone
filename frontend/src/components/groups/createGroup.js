@@ -133,7 +133,7 @@ class CreateGroup extends Component {
 
                 <select multiple class="form-select" id="multiple-select-friends" onChange={this.handleChange}>
                   <option disabled selected value>Please Add Friends To Group </option>
-                  {allUserList.map(su => <option value = {su.user_id} > {su.name} </option>)}
+                  {allUserList.map(su => <option value = {su._id} > {su.name} </option>)}
                 </select>
                 
                 <input

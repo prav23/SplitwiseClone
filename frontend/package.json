@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.8.0",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
+    "jwt-decode": "^3.1.2",
     "react": "^17.0.1",
     "react-cookies": "^0.1.1",
     "react-dom": "^17.0.1",
@@ -44,5 +45,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://ec2-18-222-123-13.us-east-2.compute.amazonaws.com:3001"
+  "proxy": "http://localhost:3001"
 }
